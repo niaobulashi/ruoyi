@@ -55,7 +55,7 @@ export function exportCalendar(query) {
 // 同步日历数据
 export function syncCalendar(data) {
   return request({
-    url: '/system/calendar/dateSyncRange',
+    url: '/system/calendar/dateSyncRange123',
     method: 'post',
     data: data
   })
