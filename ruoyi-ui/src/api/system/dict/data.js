@@ -59,3 +59,11 @@ export function exportData(query) {
     params: query
   })
 }
+
+// 下载字典数据导入模板
+export function importTemplate() {
+  return request({
+    url: '/system/dict/data/importTemplate',
+    method: 'get'
+  })
+}

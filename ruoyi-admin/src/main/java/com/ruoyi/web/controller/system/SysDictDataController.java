@@ -1,6 +1,11 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +27,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysDictTypeService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 数据字典信息
@@ -37,7 +43,13 @@ public class SysDictDataController extends BaseController
 
     @Autowired
     private ISysDictTypeService dictTypeService;
-
+    
+    @Autowired
+    private TokenService tokenService;
+    
+    /**
+     * 字典数据列表查询
+     */
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysDictData dictData)
@@ -46,7 +58,10 @@ public class SysDictDataController extends BaseController
         List<SysDictData> list = dictDataService.selectDictDataList(dictData);
         return getDataTable(list);
     }
-
+    
+    /**
+     * 字典数据导出模板下载
+     */
     @Log(title = "字典数据", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @GetMapping("/export")
@@ -56,7 +71,18 @@ public class SysDictDataController extends BaseController
         ExcelUtil<SysDictData> util = new ExcelUtil<SysDictData>(SysDictData.class);
         return util.exportExcel(list, "字典数据");
     }
-
+    
+    @Log(title = "字典数据", businessType = BusinessType.IMPORT)
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<SysDictData> util = new ExcelUtil<SysDictData>(SysDictData.class);
+        List<SysDictData> sysDictDataList = util.importExcel(file.getInputStream());
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = loginUser.getUsername();
+        String message = dictDataService.importDictData(sysDictDataList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
     /**
      * 查询字典数据详细
      */
@@ -66,7 +92,17 @@ public class SysDictDataController extends BaseController
     {
         return AjaxResult.success(dictDataService.selectDictDataById(dictCode));
     }
-
+    
+    /**
+     * 下载模板
+     */
+    @GetMapping("/importTemplate")
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<SysDictData> util = new ExcelUtil<SysDictData>(SysDictData.class);
+        return util.importTemplateExcel("字典数据");
+    }
+    
     /**
      * 根据字典类型查询字典数据信息
      */

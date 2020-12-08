@@ -170,8 +170,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="cron表达式" prop="cronExpression">
+            <!--<el-form-item label="cron表达式" prop="cronExpression">
               <el-input v-model="form.cronExpression" placeholder="请输入cron执行表达式" />
+              <cron @change="changeCron" @close="cronPopover=false" i18n="en"></cron>
+            </el-form-item>-->
+            <el-form-item label="cron表达式">
+              <el-popover v-model="cronPopover">
+                <el-input slot="reference" @click="cronPopover=true" v-model="form.cronExpression" placeholder="请输入定时策略"></el-input>
+                <cron @change="changeCron" @close="cronPopover=false" i18n="cn"></cron>
+              </el-popover>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -262,8 +269,10 @@
 
 <script>
 import { listJob, getJob, delJob, addJob, updateJob, exportJob, runJob, changeJobStatus } from "@/api/monitor/job";
+import {cron} from 'vue-cron';
 
 export default {
+  components: { cron },
   name: "Job",
   data() {
     return {
@@ -291,6 +300,7 @@ export default {
       jobGroupOptions: [],
       // 状态字典
       statusOptions: [],
+      cronPopover:false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -477,6 +487,9 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
+    },
+    changeCron(val){
+      this.form.cronExpression=val
     }
   }
 };

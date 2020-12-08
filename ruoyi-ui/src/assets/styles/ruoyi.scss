@@ -112,6 +112,10 @@
 	width: inherit;
 }
 
+ .el-table .cell {
+   white-space: pre-line;
+ }
+
 .el-tree-node__content > .el-checkbox {
 	margin-right: 8px;
 }

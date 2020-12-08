@@ -51,6 +51,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where dict_type = #{dictType} and dict_value = #{dictValue}
 	</select>
 	
+	<select id="selectDictLabelImport" resultType="String">
+		select dict_label
+		  from sys_dict_data
+		 where dict_type = #{dictType}
+		   and dict_value = #{dictValue}
+		   and dict_label like concat('%', #{dictLabel}, '%')
+	</select>
+	
 	<select id="selectDictDataById" parameterType="Long" resultMap="SysDictDataResult">
 		<include refid="selectDictDataVo"/>
 		where dict_code = #{dictCode}

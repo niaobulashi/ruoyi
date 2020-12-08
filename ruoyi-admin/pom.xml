@@ -72,6 +72,13 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
+    
+        <!-- 考勤模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-attendance</artifactId>
+            <version>${ruoyi.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -100,7 +107,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>${project.artifactId}</warName>
                 </configuration>   
-           </plugin>   
+           </plugin>
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>

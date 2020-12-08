@@ -22,6 +22,8 @@ import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, 
 import Pagination from "@/components/Pagination";
 //自定义表格工具扩展
 import RightToolbar from "@/components/RightToolbar"
+// cron表达式生成插件
+import VueCron from 'vue-cron'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -51,6 +53,7 @@ Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 
 Vue.use(permission)
+Vue.use(VueCron);
 
 /**
  * If you don't want to use mock-server
