@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.attendance.mapper.TDailyMapper">
+    
+    <resultMap type="TDaily" id="TDailyResult">
+        <result property="dailyId"    column="daily_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="dailyTime"    column="daily_time"    />
+        <result property="daily"    column="daily"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="nickName"    column="nick_name"    />
+    </resultMap>
+
+    <sql id="selectTDailyVo">
+        select daily_id, user_id, daily_time, daily, del_flag, create_by, create_time, update_by, update_time, remark from t_daily
+    </sql>
+
+    <select id="selectTDailyList" parameterType="TDaily" resultMap="TDailyResult">
+        select d.daily_id, d.user_id, u.nick_name, d.daily_time, d.daily, d.del_flag, d.create_by, d.create_time, d.update_by,
+        d.update_time, d.remark from t_daily d
+        left join sys_user u on u.user_id = d.user_id
+        <where>
+            <if test="nickName != null ">
+                and u.nick_name like concat('%', #{nickName}, '%')
+            </if>
+            <if test="dailyTime != null ">
+                and d.daily_time = #{dailyTime}
+            </if>
+            <if test="userId != null ">
+                and d.user_id = #{userId}
+            </if>
+            <if test="daily != null  and daily != ''">
+                and d.daily like concat('%', #{daily}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(daily_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(daily_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        order by d.daily_time desc
+    </select>
+    
+    <select id="selectTDailyById" parameterType="Long" resultMap="TDailyResult">
+        <include refid="selectTDailyVo"/>
+        where daily_id = #{dailyId}
+    </select>
+    
+    <insert id="insertTDaily" parameterType="TDaily" useGeneratedKeys="true" keyProperty="dailyId">
+        insert into t_daily
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="dailyTime != null">daily_time,</if>
+            <if test="daily != null and daily != ''">daily,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="dailyTime != null">#{dailyTime},</if>
+            <if test="daily != null and daily != ''">#{daily},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTDaily" parameterType="TDaily">
+        update t_daily
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="dailyTime != null">daily_time = #{dailyTime},</if>
+            <if test="daily != null and daily != ''">daily = #{daily},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where daily_id = #{dailyId}
+    </update>
+
+    <delete id="deleteTDailyById" parameterType="Long">
+        delete from t_daily where daily_id = #{dailyId}
+    </delete>
+
+    <delete id="deleteTDailyByIds" parameterType="String">
+        delete from t_daily where daily_id in
+        <foreach item="dailyId" collection="array" open="(" separator="," close=")">
+            #{dailyId}
+        </foreach>
+    </delete>
+    
+</mapper>

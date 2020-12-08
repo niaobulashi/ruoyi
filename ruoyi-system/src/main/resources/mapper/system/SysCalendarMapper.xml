@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysCalendarMapper">
+    
+    <resultMap type="SysCalendar" id="SysCalendarResult">
+        <result property="dateStr" column="c_date"/>
+        <result property="type" column="c_type"/>
+        <result property="typeName" column="c_typename"/>
+        <result property="yearName" column="c_yearname"/>
+        <result property="nongLiCn" column="c_nonglicn"/>
+        <result property="nongLi" column="c_nongli"/>
+        <result property="animalsYear" column="c_animals_year"/>
+        <result property="throttle" column="c_throttle"/>
+        <result property="weekCn" column="c_weekcn"/>
+        <result property="week1" column="c_week1"/>
+        <result property="week2" column="c_week2"/>
+        <result property="week3" column="c_week3"/>
+        <result property="dayNum" column="c_daynum"/>
+        <result property="weekNum" column="c_weeknum"/>
+        <result property="suit" column="c_suit"/>
+        <result property="avoid" column="c_avoid"/>
+        <result property="desc" column="c_desc"/>
+        <result property="deleteFlag" column="delete_flag"/>
+    </resultMap>
+    
+    <sql id="selectSysCalendarVo">
+        select c_date, c_type, c_typename, c_yearname, c_nonglicn, c_nongli, c_animals_year, c_throttle, c_weekcn, c_week1, c_week2, c_week3, c_daynum, c_weeknum, c_suit, c_avoid, c_desc, delete_flag from sys_calendar
+    </sql>
+    
+    <select id="selectSysCalendarList" parameterType="SysCalendar" resultMap="SysCalendarResult">
+        <include refid="selectSysCalendarVo"/>
+        <where>
+            and delete_flag = '0'
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and c_date &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and c_date &lt;= #{params.endTime}
+            </if>
+            <if test="type != null  and type != ''">
+                and c_type = #{type}
+            </if>
+            <if test="suit != null  and suit != ''">
+                and c_suit like concat('%', #{suit}, '%')
+            </if>
+            <if test="avoid != null  and avoid != ''">
+                and c_avoid like concat('%', #{avoid}, '%')
+            </if>
+        </where>
+        order by c_date desc
+    </select>
+    
+    <select id="selectSysCalendarById" parameterType="String" resultMap="SysCalendarResult">
+        <include refid="selectSysCalendarVo"/>
+        where c_date = #{dateStr} and delete_flag = '0'
+    </select>
+    
+    <insert id="insertSysCalendar" parameterType="SysCalendar">
+        insert into sys_calendar
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dateStr != null">c_date,</if>
+            <if test="type != null">c_type,</if>
+            <if test="typeName != null">c_typename,</if>
+            <if test="yearName != null">c_yearname,</if>
+            <if test="nongLiCn != null">c_nonglicn,</if>
+            <if test="nongLi != null">c_nongli,</if>
+            <if test="animalsYear != null">c_animals_year,</if>
+            <if test="throttle != null">c_throttle,</if>
+            <if test="weekCn != null">c_weekcn,</if>
+            <if test="week1 != null">c_week1,</if>
+            <if test="week2 != null">c_week2,</if>
+            <if test="week3 != null">c_week3,</if>
+            <if test="dayNum != null">c_daynum,</if>
+            <if test="weekNum != null">c_weeknum,</if>
+            <if test="suit != null">c_suit,</if>
+            <if test="avoid != null">c_avoid,</if>
+            <if test="desc != null">c_desc,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dateStr != null">#{dateStr},</if>
+            <if test="type != null">#{type},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="yearName != null">#{yearName},</if>
+            <if test="nongLiCn != null">#{nongLiCn},</if>
+            <if test="nongLi != null">#{nongLi},</if>
+            <if test="animalsYear != null">#{animalsYear},</if>
+            <if test="throttle != null">#{throttle},</if>
+            <if test="weekCn != null">#{weekCn},</if>
+            <if test="week1 != null">#{week1},</if>
+            <if test="week2 != null">#{week2},</if>
+            <if test="week3 != null">#{week3},</if>
+            <if test="dayNum != null">#{dayNum},</if>
+            <if test="weekNum != null">#{weekNum},</if>
+            <if test="suit != null">#{suit},</if>
+            <if test="avoid != null">#{avoid},</if>
+            <if test="desc != null">#{desc},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateSysCalendar" parameterType="SysCalendar">
+        update sys_calendar
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">c_type = #{type},</if>
+            <if test="typeName != null">c_typename = #{typeName},</if>
+            <if test="yearName != null">c_yearname = #{yearName},</if>
+            <if test="nongLiCn != null">c_nonglicn = #{nongLiCn},</if>
+            <if test="nongLi != null">c_nongli = #{nongLi},</if>
+            <if test="animalsYear != null">c_animals_year = #{animalsYear},</if>
+            <if test="throttle != null">c_throttle = #{throttle},</if>
+            <if test="weekCn != null">c_weekcn = #{weekCn},</if>
+            <if test="week1 != null">c_week1 = #{week1},</if>
+            <if test="week2 != null">c_week2 = #{week2},</if>
+            <if test="week3 != null">c_week3 = #{week3},</if>
+            <if test="dayNum != null">c_daynum = #{dayNum},</if>
+            <if test="weekNum != null">c_weeknum = #{weekNum},</if>
+            <if test="suit != null">c_suit = #{suit},</if>
+            <if test="avoid != null">c_avoid = #{avoid},</if>
+            <if test="desc != null">c_desc = #{desc},</if>
+        </trim>
+        where c_date = #{dateStr}
+    </update>
+    
+    <delete id="deleteSysCalendarById" parameterType="String">
+        delete from sys_calendar where c_date = #{dateStr}
+    </delete>
+    
+    <update id="deleteSysCalendarByIds" parameterType="String">
+        update sys_calendar set delete_flag = '1' where c_date in
+        <foreach item="dateStr" collection="array" open="(" separator="," close=")">
+            #{dateStr}
+        </foreach>
+    </update>
+
+</mapper>
