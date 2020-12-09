@@ -1,10 +1,11 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -109,7 +110,12 @@ public class SysDictDataController extends BaseController
     @GetMapping(value = "/type/{dictType}")
     public AjaxResult dictType(@PathVariable String dictType)
     {
-        return AjaxResult.success(dictTypeService.selectDictDataByType(dictType));
+        List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);
+        if (StringUtils.isNull(data))
+        {
+            data = new ArrayList<SysDictData>();
+        }
+        return AjaxResult.success(data);
     }
 
     /**
