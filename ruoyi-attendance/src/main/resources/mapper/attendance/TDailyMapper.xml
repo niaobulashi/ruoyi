@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <result property="nickName"    column="nick_name"    />
+        <result property="weekCn"    column="c_weekcn"    />
     </resultMap>
 
     <sql id="selectTDailyVo">
@@ -23,9 +24,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectTDailyList" parameterType="TDaily" resultMap="TDailyResult">
-        select d.daily_id, d.user_id, u.nick_name, d.daily_time, d.daily, d.del_flag, d.create_by, d.create_time, d.update_by,
-        d.update_time, d.remark from t_daily d
-        left join sys_user u on u.user_id = d.user_id
+        SELECT d.daily_id, d.user_id, u.nick_name, d.daily_time, d.daily, d.del_flag, d.create_by, d.create_time, d.update_by,
+        d.update_time, d.remark, c.c_weekcn from t_daily d
+        LEFT JOIN sys_user u ON u.user_id = d.user_id
+        LEFT JOIN sys_calendar c ON c.c_date = d.daily_time
         <where>
             <if test="nickName != null ">
                 and u.nick_name like concat('%', #{nickName}, '%')
@@ -40,10 +42,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and d.daily like concat('%', #{daily}, '%')
             </if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                and date_format(daily_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                and daily_time &gt;= #{params.beginTime}
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                and date_format(daily_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                and daily_time &lt;= #{params.endTime}
             </if>
         </where>
         order by d.daily_time desc

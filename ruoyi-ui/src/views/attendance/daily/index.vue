@@ -89,6 +89,7 @@
           <span>{{ parseTime(scope.row.dailyTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="周期" align="center" prop="weekCn" width="100"/>
       <el-table-column label="日报内容" align="left" prop="daily" width="800"/>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

@@ -63,6 +63,8 @@ public class TDaily extends BaseEntity {
     
     /** 结束时间 */
     private String endTime;
+    /** 周期*/
+    private String weekCn;
     
     public void setDailyId(Long dailyId) {
         this.dailyId = dailyId;
@@ -150,5 +152,13 @@ public class TDaily extends BaseEntity {
     
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+    
+    public String getWeekCn() {
+        return weekCn;
+    }
+    
+    public void setWeekCn(String weekCn) {
+        this.weekCn = weekCn;
     }
 }
