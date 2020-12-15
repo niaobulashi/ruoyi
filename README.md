@@ -34,7 +34,8 @@
 
 
 ## 在线体验
-演示地址：ruoyi.niaobulashi.com
+演示地址：[ruoyi.niaobulashi.com](ruoyi.niaobulashi.com)
+
 guest/guest
 
 ## 扩展功能
