@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.file.PdfUtilsTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -88,5 +90,17 @@ public class SysNoticeController extends BaseController
     public AjaxResult remove(@PathVariable Long[] noticeIds)
     {
         return toAjax(noticeService.deleteNoticeByIds(noticeIds));
+    }
+    
+    /**
+     * 导出公告内容为pdf
+     */
+    @Log(title = "通知公告", businessType = BusinessType.EXPORT)
+    @GetMapping(value = "/export/{noticeId}")
+    public AjaxResult export(@PathVariable Long noticeId) throws Exception {
+        SysNotice sysNotice = noticeService.selectNoticeById(noticeId);
+        PdfUtilsTest pdfUtilsTest = new PdfUtilsTest();
+        pdfUtilsTest.html2Pdf(sysNotice.getNoticeContent());
+        return toAjax(1);
     }
 }

@@ -65,6 +65,15 @@
           v-hasPermi="['system:notice:remove']"
         >删除</el-button>
       </el-col>
+      <!--<el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          :disabled="single"
+          @click="handleExport"
+        >导出PDF</el-button>
+      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -245,20 +254,20 @@ export default {
         this.loading = false;
       });
     },
-    // 公告状态字典翻译
+    /** 公告状态字典翻译 */
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
-    // 公告状态字典翻译
+    /** 公告状态字典翻译 */
     typeFormat(row, column) {
       return this.selectDictLabel(this.typeOptions, row.noticeType);
     },
-    // 取消按钮
+    /** 取消按钮 */
     cancel() {
       this.open = false;
       this.reset();
     },
-    // 表单重置
+    /** 表单重置 */
     reset() {
       this.form = {
         noticeId: undefined,
@@ -279,7 +288,7 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
+    /** 多选框选中数据 */
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.noticeId)
       this.single = selection.length!=1
@@ -333,8 +342,24 @@ export default {
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-    }
+        }).catch(err => {
+      })
+    },
+    /** 导出按钮操作 */
+    handleExport(row) {
+      const noticeIds = row.noticeId || this.ids
+      this.$confirm('是否确认导出公告编号为"' + noticeIds + '"的内容?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportNotice(noticeIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("导出成功");
+      }).catch(err => {
+      })
+    },
   }
 };
 </script>

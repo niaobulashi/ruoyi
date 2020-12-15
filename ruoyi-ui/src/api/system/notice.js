@@ -42,3 +42,11 @@ export function delNotice(noticeId) {
     method: 'delete'
   })
 }
+
+// 导出字典数据
+export function exportNotice(noticeId) {
+  return request({
+    url: '/system/notice/export/' + noticeId,
+    method: 'get',
+  })
+}
