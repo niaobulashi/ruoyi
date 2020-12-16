@@ -65,15 +65,16 @@
           v-hasPermi="['system:notice:remove']"
         >删除</el-button>
       </el-col>
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
           :disabled="single"
           @click="handleExport"
+          v-hasPermi="['system:notice:exportPDF']"
         >导出PDF</el-button>
-      </el-col>-->
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -348,7 +349,7 @@ export default {
     /** 导出按钮操作 */
     handleExport(row) {
       const noticeIds = row.noticeId || this.ids
-      this.$confirm('是否确认导出公告编号为"' + noticeIds + '"的内容?', "警告", {
+      this.$confirm('是否确认导出公告编号为"' + noticeIds + '"的内容? （未完成！！！）', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

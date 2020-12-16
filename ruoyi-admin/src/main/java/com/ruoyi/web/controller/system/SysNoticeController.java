@@ -95,12 +95,14 @@ public class SysNoticeController extends BaseController
     /**
      * 导出公告内容为pdf
      */
+    @PreAuthorize("@ss.hasPermi('system:notice:exportPDF')")
     @Log(title = "通知公告", businessType = BusinessType.EXPORT)
     @GetMapping(value = "/export/{noticeId}")
     public AjaxResult export(@PathVariable Long noticeId) throws Exception {
         SysNotice sysNotice = noticeService.selectNoticeById(noticeId);
         PdfUtilsTest pdfUtilsTest = new PdfUtilsTest();
-        pdfUtilsTest.html2Pdf(sysNotice.getNoticeContent());
+        String COMPLETE_CONTENT = "<html><meta charset=\"utf-8\"/><head></head><body style=\"font-family: SimSun;\">" + sysNotice.getNoticeContent() + "</body></html>";
+        pdfUtilsTest.html2Pdf(COMPLETE_CONTENT.replaceAll("<br>", "\"<br>\"</br>"));
         return toAjax(1);
     }
 }

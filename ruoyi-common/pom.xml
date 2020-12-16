@@ -14,9 +14,11 @@
     <description>
         common通用工具
     </description>
-
+    <properties>
+        <itextpdf.version>5.5.13.2</itextpdf.version>
+    </properties>
+    
     <dependencies>
-
         <!-- Spring框架基本的核心工具 -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -131,18 +133,16 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.5.13.2</version>
+            <version>${itextpdf.version}</version>
         </dependency>
     
         <!-- HTML转PDF工具 -->
         <dependency>
             <groupId>com.itextpdf.tool</groupId>
             <artifactId>xmlworker</artifactId>
-            <version>5.5.13.2</version>
+            <version>${itextpdf.version}</version>
         </dependency>
-
-
-
+        
     </dependencies>
 
 </project>
