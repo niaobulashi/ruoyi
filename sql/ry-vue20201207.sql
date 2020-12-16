@@ -2413,7 +2413,7 @@ INSERT INTO `sys_menu` VALUES (2013, '工作日历删除', 2009, 4, '#', '', 1, 
 INSERT INTO `sys_menu` VALUES (2014, '工作日历导出', 2009, 5, '#', '', 1, 0, 'F', '0', '0', 'system:calendar:export', '#', 'admin', '2020-11-25 14:46:41', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2015, '工作日同步日期', 2009, 6, '', NULL, 1, 0, 'F', '0', '0', 'system:calendar:syncDate', '#', 'admin', '2020-11-26 16:00:27', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2016, '工作日历同步', 2009, 7, '', NULL, 1, 0, 'F', '0', '0', 'system:calendar:doSync', '#', 'admin', '2020-11-26 16:01:01', '', NULL, '');
-
+INSERT INTO `sys_menu` VALUES (2017, '公告PDF导出', 107, 5, '', NULL, 1, 0, 'F', '0', '0', 'system:notice:exportPDF', '#', 'admin', '2020-12-16 11:33:58', '', NULL, '');
 -- ----------------------------
 -- Table structure for sys_notice
 -- ----------------------------
@@ -2737,6 +2737,7 @@ INSERT INTO `sys_role_menu` VALUES (100, 2013);
 INSERT INTO `sys_role_menu` VALUES (100, 2014);
 INSERT INTO `sys_role_menu` VALUES (100, 2015);
 INSERT INTO `sys_role_menu` VALUES (100, 2016);
+INSERT INTO `sys_role_menu` VALUES (100, 2017);
 
 -- ----------------------------
 -- Table structure for sys_user
