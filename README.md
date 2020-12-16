@@ -1,6 +1,6 @@
 ## 前言
 
-> 基于开源项目RuoYi-Vue，扩展开发添加新业务功能
+基于开源项目[RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue) ，扩展开发添加新业务功能
 
 ## 平台简介
 
@@ -38,6 +38,8 @@
 
 guest/guest
 
+文档地址：[http://doc.ruoyi.vip/ruoyi-vue/](http://doc.ruoyi.vip/ruoyi-vue/)
+
 ## 扩展功能
 1. 考勤管理：项目组记录日志考勤。
 2. 工作日历：万年历数据，可用于区分日期是否为工作日。
@@ -45,7 +47,7 @@ guest/guest
 4. 数据字典：字典数据提供导入功能。
 
 
-感谢ruoyi的开源
+## 感谢ruoyi的开源
 
 ## 演示图
 
