@@ -54,7 +54,7 @@ Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 
 Vue.use(permission)
-Vue.use(VueCron);
+Vue.use(VueCron)
 Vue.use(hljs.vuePlugin);
 
 /**

@@ -60,5 +60,5 @@ public enum BusinessType
     /**
      * 同步
      */
-    SYNC,
+    SYNC
 }

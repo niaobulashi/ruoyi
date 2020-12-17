@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.monitor;
 
 import java.util.List;
+
+import com.github.pagehelper.PageHelper;
+import com.ruoyi.common.annotation.Url;
+import com.ruoyi.common.utils.ServletUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +23,7 @@ import com.ruoyi.system.service.ISysOperLogService;
 
 /**
  * 操作日志记录
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -28,12 +32,17 @@ public class SysOperlogController extends BaseController
 {
     @Autowired
     private ISysOperLogService operLogService;
-
+    
+    @Url
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysOperLog operLog)
     {
         startPage();
+//        PageHelper.startPage(1, 10);
+        /*PageHelper.startPage(ServletUtils.getParameterToInt("pageNum"),
+                ServletUtils.getParameterToInt("pageSize"),
+                String.valueOf(ServletUtils.getParameterToInt("orderBy")));*/
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
         return getDataTable(list);
     }

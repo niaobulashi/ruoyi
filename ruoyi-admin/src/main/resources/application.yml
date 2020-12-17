@@ -12,6 +12,8 @@ ruoyi:
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
   captchaType: math
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  profile: D:/ruoyi/uploadPath
 
 # 开发环境配置
 server:
@@ -41,7 +43,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles: 
-    active: prod
+    active: druid
   # 文件上传
   servlet:
      multipart:
@@ -98,7 +100,7 @@ pagehelper:
   helperDialect: mysql
   reasonable: true
   supportMethodsArguments: true
-  params: count=countSql 
+  params: count=countSql
 
 # Swagger配置
 swagger:

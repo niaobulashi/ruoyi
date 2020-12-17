@@ -47,6 +47,6 @@ export function delNotice(noticeId) {
 export function exportNotice(noticeId) {
   return request({
     url: '/system/notice/export/' + noticeId,
-    method: 'get',
+    method: 'get'
   })
 }
