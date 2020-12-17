@@ -360,7 +360,7 @@ export default {
         this.msgSuccess("导出成功");
       }).catch(err => {
       })
-    },
+    }
   }
 };
 </script>
