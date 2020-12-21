@@ -33,16 +33,11 @@ public class SysOperlogController extends BaseController
     @Autowired
     private ISysOperLogService operLogService;
     
-    @Url
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysOperLog operLog)
     {
         startPage();
-//        PageHelper.startPage(1, 10);
-        /*PageHelper.startPage(ServletUtils.getParameterToInt("pageNum"),
-                ServletUtils.getParameterToInt("pageSize"),
-                String.valueOf(ServletUtils.getParameterToInt("orderBy")));*/
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
         return getDataTable(list);
     }
