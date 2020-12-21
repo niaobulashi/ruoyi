@@ -62,6 +62,8 @@ spring:
     host: localhost
     # 端口，默认为6379
     port: 6379
+    # 设置不同的库，默认值为0，redis默认16个，即0到15
+    database: 0
     # 密码
     password: 
     # 连接超时时间
