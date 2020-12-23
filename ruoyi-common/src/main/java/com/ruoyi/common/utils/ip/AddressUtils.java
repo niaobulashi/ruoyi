@@ -53,4 +53,8 @@ public class AddressUtils
         }
         return address;
     }
+    
+    public static void main(String[] args) {
+        System.out.println(getRealAddressByIP("116.235.203.67"));
+    }
 }

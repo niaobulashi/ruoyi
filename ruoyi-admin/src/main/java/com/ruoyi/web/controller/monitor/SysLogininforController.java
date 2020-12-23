@@ -31,7 +31,6 @@ public class SysLogininforController extends BaseController
     @Autowired
     private ISysLogininforService logininforService;
     
-    @Url
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysLogininfor logininfor)
