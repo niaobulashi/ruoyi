@@ -41,6 +41,12 @@ public class PdfUtilsTest {
      * @throws Exception
      */
     public void html2Pdf(String htmlContent) throws Exception {
+        htmlContent = htmlContent.replaceAll("<div", "<span");
+        htmlContent = htmlContent.replaceAll("/div>", "/span><br/>");
+        //关闭未封闭式标签br
+        htmlContent = htmlContent.replaceAll("<br[^>]*>", "<br/>");
+        //处理样式background-color: transparent; IE模式下存在兼容问题，火狐谷歌正常
+        htmlContent = htmlContent.replaceAll("background-color: transparent;", " ");
         File dir = new File("./temporary");
         if (!dir.exists()) {
             dir.mkdir();

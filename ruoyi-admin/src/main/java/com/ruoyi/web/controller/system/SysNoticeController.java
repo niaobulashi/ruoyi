@@ -102,7 +102,7 @@ public class SysNoticeController extends BaseController
         SysNotice sysNotice = noticeService.selectNoticeById(noticeId);
         PdfUtilsTest pdfUtilsTest = new PdfUtilsTest();
         String COMPLETE_CONTENT = "<html><meta charset=\"utf-8\"/><head></head><body style=\"font-family: SimSun;\">" + sysNotice.getNoticeContent() + "</body></html>";
-        pdfUtilsTest.html2Pdf(COMPLETE_CONTENT.replaceAll("<br>", "\"<br>\"</br>"));
+        pdfUtilsTest.html2Pdf(COMPLETE_CONTENT);
         return toAjax(1);
     }
 }
