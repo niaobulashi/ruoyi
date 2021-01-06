@@ -20,9 +20,6 @@ import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, 
 import Pagination from "@/components/Pagination";
 // 自定义表格工具扩展
 import RightToolbar from "@/components/RightToolbar"
-// 代码高亮插件
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github-gist.css'
 // cron表达式生成插件
 import VueCron from 'vue-cron'
 
@@ -55,7 +52,6 @@ Vue.component('RightToolbar', RightToolbar)
 
 Vue.use(permission)
 Vue.use(VueCron)
-Vue.use(hljs.vuePlugin);
 
 /**
  * If you don't want to use mock-server
