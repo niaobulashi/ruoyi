@@ -30,7 +30,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -39,6 +39,7 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
+          plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
@@ -48,6 +49,7 @@
       <el-col :span="1.5">
         <el-button
           type="success"
+          plain
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
@@ -58,22 +60,13 @@
       <el-col :span="1.5">
         <el-button
           type="danger"
+          plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:notice:remove']"
         >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          :disabled="single"
-          @click="handleExport"
-          v-hasPermi="['system:notice:exportPDF']"
-        >导出PDF</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -255,20 +248,20 @@ export default {
         this.loading = false;
       });
     },
-    /** 公告状态字典翻译 */
+    // 公告状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
-    /** 公告状态字典翻译 */
+    // 公告状态字典翻译
     typeFormat(row, column) {
       return this.selectDictLabel(this.typeOptions, row.noticeType);
     },
-    /** 取消按钮 */
+    // 取消按钮
     cancel() {
       this.open = false;
       this.reset();
     },
-    /** 表单重置 */
+    // 表单重置
     reset() {
       this.form = {
         noticeId: undefined,
@@ -289,7 +282,7 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    /** 多选框选中数据 */
+    // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.noticeId)
       this.single = selection.length!=1
@@ -343,23 +336,7 @@ export default {
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(err => {
-      })
-    },
-    /** 导出按钮操作 */
-    handleExport(row) {
-      const noticeIds = row.noticeId || this.ids
-      this.$confirm('是否确认导出公告编号为"' + noticeIds + '"的内容? （未完成！！！）', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return exportNotice(noticeIds);
-      }).then(() => {
-        this.getList();
-        this.msgSuccess("导出成功");
-      }).catch(err => {
-      })
+        })
     }
   }
 };
