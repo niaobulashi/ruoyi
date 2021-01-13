@@ -140,12 +140,12 @@
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="用户编号" align="center" prop="userId" v-if="columns[0].visible" />
-          <el-table-column label="用户名称" align="center" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="用户昵称" align="center" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="部门" align="center" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="手机号码" align="center" prop="phonenumber" v-if="columns[4].visible" width="120" />
-          <el-table-column label="状态" align="center" v-if="columns[5].visible">
+          <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
+          <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
+          <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
+          <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
             <template slot-scope="scope">
               <el-switch
                 v-model="scope.row.status"
@@ -506,16 +506,16 @@ export default {
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
       this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return changeUserStatus(row.userId, row.status);
-        }).then(() => {
-          this.msgSuccess(text + "成功");
-        }).catch(function() {
-          row.status = row.status === "0" ? "1" : "0";
-        });
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return changeUserStatus(row.userId, row.status);
+      }).then(() => {
+        this.msgSuccess(text + "成功");
+      }).catch(function() {
+        row.status = row.status === "0" ? "1" : "0";
+      });
     },
     // 取消按钮
     cancel() {
@@ -591,10 +591,10 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       }).then(({ value }) => {
-          resetUserPwd(row.userId, value).then(response => {
-            this.msgSuccess("修改成功，新密码是：" + value);
-          });
-        }).catch(() => {});
+        resetUserPwd(row.userId, value).then(response => {
+          this.msgSuccess("修改成功，新密码是：" + value);
+        });
+      }).catch(() => {});
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -620,28 +620,28 @@ export default {
     handleDelete(row) {
       const userIds = row.userId || this.ids;
       this.$confirm('是否确认删除用户编号为"' + userIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delUser(userIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delUser(userIds);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
       this.$confirm('是否确认导出所有用户数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportUser(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportUser(queryParams);
+      }).then(response => {
+        this.download(response.msg);
+      })
     },
     /** 导入按钮操作 */
     handleImport() {
