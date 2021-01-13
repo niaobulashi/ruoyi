@@ -25,6 +25,8 @@ CREATE TABLE `gen_table`  (
   `table_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
   `table_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '表名称',
   `table_comment` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '表描述',
+   sub_table_name    varchar(64)     default null               comment '关联子表的表名',
+   sub_table_fk_name varchar(64)     default null               comment '子表关联的外键名',
   `class_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '实体类名称',
   `tpl_category` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'crud' COMMENT '使用的模板（crud单表操作 tree树表操作）',
   `package_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '生成包路径',

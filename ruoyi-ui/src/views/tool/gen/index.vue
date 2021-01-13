@@ -84,7 +84,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="selection" align="center" width="55"></el-table-column>
       <el-table-column label="序号" type="index" width="50" align="center">
         <template slot-scope="scope">
           <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
@@ -169,7 +169,7 @@
           :name="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
           :key="key"
         >
-        <pre><code class="hljs" v-html="highlightedCode(value, key)"></code></pre>
+          <pre><code class="hljs" v-html="highlightedCode(value, key)"></code></pre>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -280,9 +280,9 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-          return synchDb(tableName);
+        return synchDb(tableName);
       }).then(() => {
-          this.msgSuccess("同步成功");
+        this.msgSuccess("同步成功");
       })
     },
     /** 打开导入表弹窗 */
@@ -329,10 +329,10 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-          return delTable(tableIds);
+        return delTable(tableIds);
       }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
+        this.getList();
+        this.msgSuccess("删除成功");
       })
     }
   }
