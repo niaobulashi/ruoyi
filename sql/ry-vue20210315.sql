@@ -2416,6 +2416,12 @@ INSERT INTO `sys_menu` VALUES (2014, '工作日历导出', 2009, 5, '#', '', 1, 
 INSERT INTO `sys_menu` VALUES (2015, '工作日同步日期', 2009, 6, '', NULL, 1, 0, 'F', '0', '0', 'system:calendar:syncDate', '#', 'admin', '2020-11-26 16:00:27', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2016, '工作日历同步', 2009, 7, '', NULL, 1, 0, 'F', '0', '0', 'system:calendar:doSync', '#', 'admin', '2020-11-26 16:01:01', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2017, '公告PDF导出', 107, 5, '', NULL, 1, 0, 'F', '0', '0', 'system:notice:exportPDF', '#', 'admin', '2020-12-16 11:33:58', '', NULL, '');
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) values('订单管理', '2018', '1', 'order', 'develop/order/index', 1, 0, 'C', '0', '0', 'develop:order:list', '#', 'admin', sysdate(), '', null, '订单管理菜单');
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) values('订单管理查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'develop:order:query',        '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) values('订单管理新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'develop:order:add',          '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) values('订单管理修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'develop:order:edit',         '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) values('订单管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'develop:order:remove',       '#', 'admin', sysdate(), '', null, '');
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark) values('订单管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'develop:order:export',       '#', 'admin', sysdate(), '', null, '');
 -- ----------------------------
 -- Table structure for sys_notice
 -- ----------------------------
@@ -2835,5 +2841,23 @@ CREATE TABLE `t_daily`  (
 -- ----------------------------
 INSERT INTO `t_daily` VALUES (1, 100, '2020-11-11 00:00:00', '1、XXXXXXX 100%\n2、XXXXXX 70%\n3、XXXXXXX 70%\n4、XXXXXXXX 100%', '0', 'admin', '2020-10-15 15:39:34', 'admin', '2020-11-13 16:00:53', '');
 INSERT INTO `t_daily` VALUES (2, 100, '2020-11-13 00:00:00', '1、XXXXXXX 100%\n2、XXXXXXX 20%\n3、XXXXXXX 100%\n4、XXXXXXX 100%\n5、XXXXXXX  30%', '0', 'admin', '2020-11-13 13:57:26', '', '2020-11-16 10:01:58', '666');
+
+
+CREATE TABLE `t_order` (
+   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+   `creator` varchar(16) NOT NULL DEFAULT 'admin' COMMENT '创建人',
+   `editor` varchar(16) NOT NULL DEFAULT 'admin' COMMENT '修改人',
+   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+   `edit_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+   `version` bigint NOT NULL DEFAULT '1' COMMENT '版本号',
+   `deleted` tinyint NOT NULL DEFAULT '0' COMMENT '软删除标识',
+   `order_id` varchar(32) NOT NULL COMMENT '订单ID',
+   `amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '订单金额',
+   `payment_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT '支付时间',
+   `order_status` tinyint NOT NULL DEFAULT '0' COMMENT '订单状态,0:处理中,1:支付成功,2:支付失败',
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `uniq_order_id` (`order_id`),
+   KEY `idx_payment_time` (`payment_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 SET FOREIGN_KEY_CHECKS = 1;

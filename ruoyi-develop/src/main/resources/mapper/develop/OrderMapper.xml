@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.develop.mapper.OrderMapper">
+    
+    <resultMap type="Order" id="OrderResult">
+        <result property="id" column="id"/>
+        <result property="creator" column="creator"/>
+        <result property="editor" column="editor"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="version" column="version"/>
+        <result property="deleted" column="deleted"/>
+        <result property="orderId" column="order_id"/>
+        <result property="amount" column="amount"/>
+        <result property="paymentTime" column="payment_time"/>
+        <result property="orderStatus" column="order_status"/>
+    </resultMap>
+    
+    <sql id="selectOrderVo">
+        select id,
+               creator,
+               editor,
+               create_time,
+               edit_time,
+               version,
+               deleted,
+               order_id,
+               amount,
+               payment_time,
+               order_status
+        from t_order
+    </sql>
+    
+    <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
+            <if test="amount != null ">and amount = #{amount}</if>
+            <if test="paymentTime != null ">and payment_time = #{paymentTime}</if>
+            <if test="orderStatus != null ">and order_status = #{orderStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderById" parameterType="String" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where id = #{id}
+    </select>
+    
+    <insert id="insertOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="creator != null">creator,</if>
+            <if test="editor != null">editor,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="editTime != null">edit_time,</if>
+            <if test="version != null">version,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="orderId != null and orderId != ''">order_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="paymentTime != null">payment_time,</if>
+            <if test="orderStatus != null">order_status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="creator != null">#{creator},</if>
+            <if test="editor != null">#{editor},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="editTime != null">#{editTime},</if>
+            <if test="version != null">#{version},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="orderId != null and orderId != ''">#{orderId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="paymentTime != null">#{paymentTime},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateOrder" parameterType="Order">
+        update t_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="editor != null">editor = #{editor},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="editTime != null">edit_time = #{editTime},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="orderId != null and orderId != ''">order_id = #{orderId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <delete id="deleteOrderById" parameterType="String">
+        delete
+        from t_order
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteOrderByIds" parameterType="String">
+        delete from t_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

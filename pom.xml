@@ -222,6 +222,13 @@
                 <artifactId>ruoyi-attendance</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
+            
+            <!-- 开发测试模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-develop</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
         
         </dependencies>
     </dependencyManagement>
@@ -234,6 +241,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-attendance</module>
+        <module>ruoyi-develop</module>
     </modules>
     <packaging>pom</packaging>
     
