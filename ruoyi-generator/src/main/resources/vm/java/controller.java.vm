@@ -36,11 +36,11 @@ public class ${ClassName}Controller extends BaseController
     @Autowired
     private I${ClassName}Service ${className}Service;
 
-/**
- * 查询${functionName}列表
- */
-@PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
-@GetMapping("/list")
+    /**
+     * 查询${functionName}列表
+     */
+    @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
+    @GetMapping("/list")
     #if($table.crud || $table.sub)
     public TableDataInfo list(${ClassName} ${className})
     {
