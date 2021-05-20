@@ -24,27 +24,27 @@ public class FileUploadUtils
      * 默认大小 50M
      */
     public static final long DEFAULT_MAX_SIZE = 50 * 1024 * 1024;
-
+    
     /**
      * 默认的文件名最大长度 100
      */
     public static final int DEFAULT_FILE_NAME_LENGTH = 100;
-
+    
     /**
      * 默认上传的地址
      */
     private static String defaultBaseDir = RuoYiConfig.getProfile();
-
+    
     public static void setDefaultBaseDir(String defaultBaseDir)
     {
         FileUploadUtils.defaultBaseDir = defaultBaseDir;
     }
-
+    
     public static String getDefaultBaseDir()
     {
         return defaultBaseDir;
     }
-
+    
     /**
      * 以默认配置进行文件上传
      *
@@ -63,7 +63,7 @@ public class FileUploadUtils
             throw new IOException(e.getMessage(), e);
         }
     }
-
+    
     /**
      * 根据文件路径上传
      *
@@ -83,7 +83,7 @@ public class FileUploadUtils
             throw new IOException(e.getMessage(), e);
         }
     }
-
+    
     /**
      * 文件上传
      *
@@ -105,17 +105,17 @@ public class FileUploadUtils
         {
             throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
         }
-
+        
         assertAllowed(file, allowedExtension);
-
+        
         String fileName = extractFilename(file);
-
+        
         File desc = getAbsoluteFile(baseDir, fileName);
         file.transferTo(desc);
         String pathFileName = getPathFileName(baseDir, fileName);
         return pathFileName;
     }
-
+    
     /**
      * 编码文件名
      */
@@ -126,22 +126,18 @@ public class FileUploadUtils
         fileName = DateUtils.datePath() + "/" + IdUtils.fastUUID() + "." + extension;
         return fileName;
     }
-
+    
     private static final File getAbsoluteFile(String uploadDir, String fileName) throws IOException
     {
         File desc = new File(uploadDir + File.separator + fileName);
-
-        if (!desc.getParentFile().exists())
-        {
-            desc.getParentFile().mkdirs();
-        }
-        if (!desc.exists())
-        {
-            desc.createNewFile();
+        if (!desc.exists()) {
+            if (!desc.getParentFile().exists()) {
+                desc.getParentFile().mkdirs();
+            }
         }
         return desc;
     }
-
+    
     private static final String getPathFileName(String uploadDir, String fileName) throws IOException
     {
         int dirLastIndex = RuoYiConfig.getProfile().length() + 1;
@@ -149,7 +145,7 @@ public class FileUploadUtils
         String pathFileName = Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
         return pathFileName;
     }
-
+    
     /**
      * 文件大小校验
      *
@@ -166,7 +162,7 @@ public class FileUploadUtils
         {
             throw new FileSizeLimitExceededException(DEFAULT_MAX_SIZE / 1024 / 1024);
         }
-
+        
         String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
         if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension))
@@ -191,9 +187,9 @@ public class FileUploadUtils
                 throw new InvalidExtensionException(allowedExtension, extension, fileName);
             }
         }
-
+        
     }
-
+    
     /**
      * 判断MIME类型是否是允许的MIME类型
      *
@@ -212,7 +208,7 @@ public class FileUploadUtils
         }
         return false;
     }
-
+    
     /**
      * 获取文件名的后缀
      *

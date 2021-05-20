@@ -17,8 +17,8 @@ ruoyi:
 
 # 开发环境配置
 server:
-  # 服务器的HTTP端口，默认为8082
-  port: 8082
+  # 服务器的HTTP端口，默认为8282
+  port: 8282
   servlet:
     # 应用的访问路径
     context-path: /

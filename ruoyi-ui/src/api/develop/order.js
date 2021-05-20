@@ -48,6 +48,7 @@ export function exportOrder(query) {
   return request({
     url: '/develop/order/export',
     method: 'get',
+    timeout: 400000,
     params: query
   })
 }

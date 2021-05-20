@@ -5,20 +5,20 @@ import java.math.RoundingMode;
 
 /**
  * 精确的浮点数运算
- * 
+ *
  * @author ruoyi
  */
 public class Arith
 {
-
+    
     /** 默认除法运算精度 */
     private static final int DEF_DIV_SCALE = 10;
-
+    
     /** 这个类不能实例化 */
     private Arith()
     {
     }
-
+    
     /**
      * 提供精确的加法运算。
      * @param v1 被加数
@@ -31,7 +31,7 @@ public class Arith
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.add(b2).doubleValue();
     }
-
+    
     /**
      * 提供精确的减法运算。
      * @param v1 被减数
@@ -44,7 +44,7 @@ public class Arith
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.subtract(b2).doubleValue();
     }
-
+    
     /**
      * 提供精确的乘法运算。
      * @param v1 被乘数
@@ -57,7 +57,7 @@ public class Arith
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.multiply(b2).doubleValue();
     }
-
+    
     /**
      * 提供（相对）精确的除法运算，当发生除不尽的情况时，精确到
      * 小数点以后10位，以后的数字四舍五入。
@@ -69,7 +69,7 @@ public class Arith
     {
         return div(v1, v2, DEF_DIV_SCALE);
     }
-
+    
     /**
      * 提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指
      * 定精度，以后的数字四舍五入。
@@ -93,7 +93,7 @@ public class Arith
         }
         return b1.divide(b2, scale, RoundingMode.HALF_UP).doubleValue();
     }
-
+    
     /**
      * 提供精确的小数位四舍五入处理。
      * @param v 需要四舍五入的数字
@@ -108,7 +108,7 @@ public class Arith
                     "The scale must be a positive integer or zero");
         }
         BigDecimal b = new BigDecimal(Double.toString(v));
-        BigDecimal one = new BigDecimal("1");
+        BigDecimal one = BigDecimal.ONE;
         return b.divide(one, scale, RoundingMode.HALF_UP).doubleValue();
     }
 }
