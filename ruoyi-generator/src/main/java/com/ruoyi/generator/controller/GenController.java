@@ -30,7 +30,7 @@ import com.ruoyi.generator.service.IGenTableService;
 
 /**
  * 代码生成 操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -39,10 +39,10 @@ public class GenController extends BaseController
 {
     @Autowired
     private IGenTableService genTableService;
-
+    
     @Autowired
     private IGenTableColumnService genTableColumnService;
-
+    
     /**
      * 查询代码生成列表
      */
@@ -54,7 +54,7 @@ public class GenController extends BaseController
         List<GenTable> list = genTableService.selectGenTableList(genTable);
         return getDataTable(list);
     }
-
+    
     /**
      * 修改代码生成业务
      */
@@ -71,7 +71,7 @@ public class GenController extends BaseController
         map.put("tables", tables);
         return AjaxResult.success(map);
     }
-
+    
     /**
      * 查询数据库列表
      */
@@ -83,7 +83,7 @@ public class GenController extends BaseController
         List<GenTable> list = genTableService.selectDbTableList(genTable);
         return getDataTable(list);
     }
-
+    
     /**
      * 查询数据表字段列表
      */
@@ -97,11 +97,11 @@ public class GenController extends BaseController
         dataInfo.setTotal(list.size());
         return dataInfo;
     }
-
+    
     /**
      * 导入表结构（保存）
      */
-    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    @PreAuthorize("@ss.hasPermi('tool:gen:import')")
     @Log(title = "代码生成", businessType = BusinessType.IMPORT)
     @PostMapping("/importTable")
     public AjaxResult importTableSave(String tables)
@@ -112,7 +112,7 @@ public class GenController extends BaseController
         genTableService.importGenTable(tableList);
         return AjaxResult.success();
     }
-
+    
     /**
      * 修改保存代码生成业务
      */
@@ -125,7 +125,7 @@ public class GenController extends BaseController
         genTableService.updateGenTable(genTable);
         return AjaxResult.success();
     }
-
+    
     /**
      * 删除代码生成
      */
@@ -137,7 +137,7 @@ public class GenController extends BaseController
         genTableService.deleteGenTableByIds(tableIds);
         return AjaxResult.success();
     }
-
+    
     /**
      * 预览代码
      */
@@ -148,7 +148,7 @@ public class GenController extends BaseController
         Map<String, String> dataMap = genTableService.previewCode(tableId);
         return AjaxResult.success(dataMap);
     }
-
+    
     /**
      * 生成代码（下载方式）
      */
@@ -160,7 +160,7 @@ public class GenController extends BaseController
         byte[] data = genTableService.downloadCode(tableName);
         genCode(response, data);
     }
-
+    
     /**
      * 生成代码（自定义路径）
      */
@@ -172,7 +172,7 @@ public class GenController extends BaseController
         genTableService.generatorCode(tableName);
         return AjaxResult.success();
     }
-
+    
     /**
      * 同步数据库
      */
@@ -184,7 +184,7 @@ public class GenController extends BaseController
         genTableService.synchDb(tableName);
         return AjaxResult.success();
     }
-
+    
     /**
      * 批量生成代码
      */
@@ -197,7 +197,7 @@ public class GenController extends BaseController
         byte[] data = genTableService.downloadCode(tableNames);
         genCode(response, data);
     }
-
+    
     /**
      * 生成zip文件
      */
