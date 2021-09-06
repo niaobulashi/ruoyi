@@ -32,6 +32,11 @@ module.exports = {
   sidebarLogo: true,
 
   /**
+   * 是否显示动态标题
+   */
+  dynamicTitle: false,
+
+  /**
    * @type {string | array} 'production' | ['production', 'development']
    * @description Need show err logs component.
    * The default is only used in the production env

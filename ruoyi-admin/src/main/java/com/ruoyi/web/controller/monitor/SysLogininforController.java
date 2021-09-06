@@ -1,8 +1,6 @@
 package com.ruoyi.web.controller.monitor;
 
 import java.util.List;
-
-import com.ruoyi.common.annotation.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +28,7 @@ public class SysLogininforController extends BaseController
 {
     @Autowired
     private ISysLogininforService logininforService;
-    
+
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysLogininfor logininfor)

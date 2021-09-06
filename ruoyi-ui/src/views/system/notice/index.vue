@@ -80,20 +80,16 @@
         prop="noticeTitle"
         :show-overflow-tooltip="true"
       />
-      <el-table-column
-        label="公告类型"
-        align="center"
-        prop="noticeType"
-        :formatter="typeFormat"
-        width="100"
-      />
-      <el-table-column
-        label="状态"
-        align="center"
-        prop="status"
-        :formatter="statusFormat"
-        width="100"
-      />
+      <el-table-column label="公告类型" align="center" prop="noticeType" width="100">
+        <template slot-scope="scope">
+          <dict-tag :options="typeOptions" :value="scope.row.noticeType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" width="100">
+        <template slot-scope="scope">
+          <dict-tag :options="statusOptions" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="创建者" align="center" prop="createBy" width="100" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="100">
         <template slot-scope="scope">
@@ -176,14 +172,10 @@
 </template>
 
 <script>
-import { listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice } from "@/api/system/notice";
-import Editor from '@/components/Editor';
+import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/notice";
 
 export default {
   name: "Notice",
-  components: {
-    Editor
-  },
   data() {
     return {
       // 遮罩层
@@ -336,7 +328,7 @@ export default {
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
+        }).catch(() => {});
     }
   }
 };

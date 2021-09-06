@@ -19,7 +19,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.service.ISysConfigService;
@@ -90,7 +89,7 @@ public class SysConfigController extends BaseController
         {
             return AjaxResult.error("新增参数'" + config.getConfigName() + "'失败，参数键名已存在");
         }
-        config.setCreateBy(SecurityUtils.getUsername());
+        config.setCreateBy(getUsername());
         return toAjax(configService.insertConfig(config));
     }
 
@@ -106,7 +105,7 @@ public class SysConfigController extends BaseController
         {
             return AjaxResult.error("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
         }
-        config.setUpdateBy(SecurityUtils.getUsername());
+        config.setUpdateBy(getUsername());
         return toAjax(configService.updateConfig(config));
     }
 
@@ -118,18 +117,19 @@ public class SysConfigController extends BaseController
     @DeleteMapping("/{configIds}")
     public AjaxResult remove(@PathVariable Long[] configIds)
     {
-        return toAjax(configService.deleteConfigByIds(configIds));
+        configService.deleteConfigByIds(configIds);
+        return success();
     }
 
     /**
-     * 清空缓存
+     * 刷新参数缓存
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)
-    @DeleteMapping("/clearCache")
-    public AjaxResult clearCache()
+    @DeleteMapping("/refreshCache")
+    public AjaxResult refreshCache()
     {
-        configService.clearCache();
+        configService.resetConfigCache();
         return AjaxResult.success();
     }
 }

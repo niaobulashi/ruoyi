@@ -24,7 +24,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysDictTypeService;
@@ -126,7 +126,7 @@ public class SysDictDataController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDictData dict)
     {
-        dict.setCreateBy(SecurityUtils.getUsername());
+        dict.setCreateBy(getUsername());
         return toAjax(dictDataService.insertDictData(dict));
     }
 
@@ -138,7 +138,7 @@ public class SysDictDataController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDictData dict)
     {
-        dict.setUpdateBy(SecurityUtils.getUsername());
+        dict.setUpdateBy(getUsername());
         return toAjax(dictDataService.updateDictData(dict));
     }
 
@@ -150,6 +150,7 @@ public class SysDictDataController extends BaseController
     @DeleteMapping("/{dictCodes}")
     public AjaxResult remove(@PathVariable Long[] dictCodes)
     {
-        return toAjax(dictDataService.deleteDictDataByIds(dictCodes));
+        dictDataService.deleteDictDataByIds(dictCodes);
+        return success();
     }
 }

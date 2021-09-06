@@ -2,11 +2,14 @@ import { constantRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
+import InnerLink from '@/layout/components/InnerLink'
 
 const permission = {
   state: {
     routes: [],
     addRoutes: [],
+    defaultRoutes: [],
+    topbarRouters: [],
     sidebarRouters: []
   },
   mutations: {
@@ -14,8 +17,19 @@ const permission = {
       state.addRoutes = routes
       state.routes = constantRoutes.concat(routes)
     },
-    SET_SIDEBAR_ROUTERS: (state, routers) => {
-      state.sidebarRouters = constantRoutes.concat(routers)
+    SET_DEFAULT_ROUTES: (state, routes) => {
+      state.defaultRoutes = constantRoutes.concat(routes)
+    },
+    SET_TOPBAR_ROUTES: (state, routes) => {
+      // 顶部导航菜单默认添加统计报表栏指向首页
+      const index = [{
+        path: 'index',
+        meta: { title: '统计报表', icon: 'dashboard'}
+      }]
+      state.topbarRouters = routes.concat(index);
+    },
+    SET_SIDEBAR_ROUTERS: (state, routes) => {
+      state.sidebarRouters = routes
     },
   },
   actions: {
@@ -30,7 +44,9 @@ const permission = {
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', rewriteRoutes)
-          commit('SET_SIDEBAR_ROUTERS', sidebarRoutes)
+          commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(sidebarRoutes))
+          commit('SET_DEFAULT_ROUTES', sidebarRoutes)
+          commit('SET_TOPBAR_ROUTES', sidebarRoutes)
           resolve(rewriteRoutes)
         })
       })
@@ -50,6 +66,8 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
         route.component = Layout
       } else if (route.component === 'ParentView') {
         route.component = ParentView
+      } else if (route.component === 'InnerLink') {
+        route.component = InnerLink
       } else {
         route.component = loadView(route.component)
       }

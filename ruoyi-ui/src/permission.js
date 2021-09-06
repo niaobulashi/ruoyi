@@ -12,6 +12,7 @@ const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
+    to.meta.title && store.dispatch('settings/setTitle', to.meta.title)
     /* has token*/
     if (to.path === '/login') {
       next({ path: '/' })
@@ -26,11 +27,11 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
           })
         }).catch(err => {
-          store.dispatch('LogOut').then(() => {
-            Message.error(err)
-            next({ path: '/' })
+            store.dispatch('LogOut').then(() => {
+              Message.error(err)
+              next({ path: '/' })
+            })
           })
-        })
       } else {
         next()
       }

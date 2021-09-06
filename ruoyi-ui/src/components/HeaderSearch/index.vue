@@ -12,7 +12,8 @@
       class="header-search-select"
       @change="change"
     >
-      <el-option v-for="option in options" :key="option.item.path" :value="option.item" :label="option.item.title.join(' > ')" />    </el-select>
+      <el-option v-for="option in options" :key="option.item.path" :value="option.item" :label="option.item.title.join(' > ')" />
+    </el-select>
   </div>
 </template>
 
@@ -69,9 +70,11 @@ export default {
       this.show = false
     },
     change(val) {
+      const path = val.path;
       if(this.ishttp(val.path)) {
         // http(s):// 路径新窗口打开
-        window.open(val.path, "_blank");
+        const pindex = path.indexOf("http");
+        window.open(path.substr(pindex, path.length), "_blank");
       } else {
         this.$router.push(val.path)
       }

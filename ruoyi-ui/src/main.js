@@ -10,7 +10,7 @@ import '@/assets/styles/ruoyi.scss' // ruoyi css
 import App from './App'
 import store from './store'
 import router from './router'
-import permission from './directive/permission'
+import directive from './directive' //directive
 
 import './assets/icons' // icon
 import './permission' // permission control
@@ -22,6 +22,16 @@ import Pagination from "@/components/Pagination";
 import RightToolbar from "@/components/RightToolbar"
 // cron表达式生成插件
 import VueCron from 'vue-cron'
+// 富文本组件
+import Editor from "@/components/Editor"
+// 文件上传组件
+import FileUpload from "@/components/FileUpload"
+// 图片上传组件
+import ImageUpload from "@/components/ImageUpload"
+// 字典标签组件
+import DictTag from '@/components/DictTag'
+// 头部标签组件
+import VueMeta from 'vue-meta'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -47,12 +57,16 @@ Vue.prototype.msgInfo = function (msg) {
 }
 
 // 全局组件挂载
+Vue.component('DictTag', DictTag)
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 
-Vue.use(permission)
 Vue.use(VueCron)
-
+Vue.component('Editor', Editor)
+Vue.component('FileUpload', FileUpload)
+Vue.component('ImageUpload', ImageUpload)
+Vue.use(directive)
+Vue.use(VueMeta)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

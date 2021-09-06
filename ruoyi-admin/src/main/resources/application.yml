@@ -3,17 +3,17 @@ ruoyi:
   # 名称
   name: RuoYi
   # 版本
-  version: 3.3.0
+  version: 3.6.0
   # 版权年份
   copyrightYear: 2021
   # 实例演示开关
   demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: true
   # 验证码类型 math 数组计算 char 字符验证
   captchaType: math
-  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/ruoyi/uploadPath
 
 # 开发环境配置
 server:
@@ -62,7 +62,7 @@ spring:
     host: localhost
     # 端口，默认为6379
     port: 6379
-    # 设置不同的库，默认值为0，redis默认16个，即0到15
+    # 数据库索引
     database: 0
     # 密码
     password: 
@@ -100,9 +100,8 @@ mybatis:
 # PageHelper分页插件
 pagehelper: 
   helperDialect: mysql
-  reasonable: true
   supportMethodsArguments: true
-  params: count=countSql
+  params: count=countSql 
 
 # Swagger配置
 swagger:

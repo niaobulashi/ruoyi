@@ -1,12 +1,11 @@
 'use strict'
 const path = require('path')
-const defaultSettings = require('./src/settings.js')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || '若依管理系统' // 标题
+const name = process.env.VUE_APP_TITLE || '若依管理系统' // 网页标题
 
 const port = process.env.port || process.env.npm_config_port || 83 // 端口
 
@@ -108,10 +107,10 @@ module.exports = {
               }
             })
           config.optimization.runtimeChunk('single'),
-            {
-              from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
-              to: './', //到根目录下
-            }
+          {
+             from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
+             to: './' //到根目录下
+          }
         }
       )
   }

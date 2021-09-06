@@ -74,8 +74,10 @@ public class Order extends BaseEntity {
     
     /**
      * 订单状态,0:处理中,1:支付成功,2:支付失败
+     * 去掉dictType，11万条数据导出仅需10s
      */
-    @Excel(name = "订单状态", dictType="pay_status")
+//    @Excel(name = "订单状态", dictType="pay_status")
+    @Excel(name = "订单状态")
     private Long orderStatus;
     
     public void setId(String id) {

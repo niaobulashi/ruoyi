@@ -95,9 +95,13 @@
 
     <el-table v-loading="loading" :data="jobList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="任务编号" align="center" prop="jobId" />
+      <el-table-column label="任务编号" width="100" align="center" prop="jobId" />
       <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
-      <el-table-column label="任务组名" align="center" prop="jobGroup" :formatter="jobGroupFormat" />
+      <el-table-column label="任务组名" align="center" prop="jobGroup">
+        <template slot-scope="scope">
+          <dict-tag :options="jobGroupOptions" :value="scope.row.jobGroup"/>
+        </template>
+      </el-table-column>
       <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
       <el-table-column label="cron执行表达式" align="center" prop="cronExpression" :show-overflow-tooltip="true" />
       <el-table-column label="状态" align="center">
@@ -115,17 +119,30 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-caret-right"
-            @click="handleRun(scope.row)"
-            v-hasPermi="['monitor:job:changeStatus']"
-          >执行一次</el-button>
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['monitor:job:edit']"
+          >修改</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-view"
-            @click="handleView(scope.row)"
-            v-hasPermi="['monitor:job:query']"
-          >详细</el-button>
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['monitor:job:remove']"
+          >删除</el-button>
+          <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['monitor:job:changeStatus', 'monitor:job:query']">
+            <span class="el-dropdown-link">
+              <i class="el-icon-d-arrow-right el-icon--right"></i>更多
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="handleRun" icon="el-icon-caret-right"
+                v-hasPermi="['monitor:job:changeStatus']">执行一次</el-dropdown-item>
+              <el-dropdown-item command="handleView" icon="el-icon-view"
+                v-hasPermi="['monitor:job:query']">任务详细</el-dropdown-item>
+              <el-dropdown-item command="handleJobLog" icon="el-icon-s-operation"
+                v-hasPermi="['monitor:job:query']">调度日志</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -139,7 +156,7 @@
     />
 
     <!-- 添加或修改定时任务对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
           <el-col :span="12">
@@ -175,17 +192,16 @@
               <el-input v-model="form.invokeTarget" placeholder="请输入调用目标字符串" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="cron表达式" prop="cronExpression">
-              <el-input v-model="form.cronExpression" placeholder="请输入cron执行表达式" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="是否并发" prop="concurrent">
-              <el-radio-group v-model="form.concurrent" size="small">
-                <el-radio-button label="0">允许</el-radio-button>
-                <el-radio-button label="1">禁止</el-radio-button>
-              </el-radio-group>
+              <el-input v-model="form.cronExpression" placeholder="请输入cron执行表达式">
+                <template slot="append">
+                  <el-button type="primary" @click="handleShowCron">
+                    生成表达式
+                    <i class="el-icon-time el-icon--right"></i>
+                  </el-button>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -197,7 +213,15 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
+            <el-form-item label="是否并发" prop="concurrent">
+              <el-radio-group v-model="form.concurrent" size="small">
+                <el-radio-button label="0">允许</el-radio-button>
+                <el-radio-button label="1">禁止</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio
@@ -214,6 +238,10 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
+    </el-dialog>
+
+    <el-dialog title="Cron表达式生成器" :visible.sync="openCron" append-to-body class="scrollbar">
+      <crontab @hide="openCron=false" @fill="crontabFill" :expression="expression"></crontab>
     </el-dialog>
 
     <!-- 任务日志详细 -->
@@ -268,8 +296,10 @@
 
 <script>
 import { listJob, getJob, delJob, addJob, updateJob, exportJob, runJob, changeJobStatus } from "@/api/monitor/job";
+import Crontab from '@/components/Crontab'
 
 export default {
+  components: { Crontab },
   name: "Job",
   data() {
     return {
@@ -295,6 +325,10 @@ export default {
       open: false,
       // 是否显示详细弹出层
       openView: false,
+      // 是否显示Cron表达式弹出层
+      openCron: false,
+      // 传入的表达式
+      expression: "",
       // 任务组名字典
       jobGroupOptions: [],
       // 状态字典
@@ -346,10 +380,6 @@ export default {
     jobGroupFormat(row, column) {
       return this.selectDictLabel(this.jobGroupOptions, row.jobGroup);
     },
-    // 状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
-    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -385,32 +415,48 @@ export default {
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
+    // 更多操作触发
+    handleCommand(command, row) {
+      switch (command) {
+        case "handleRun":
+          this.handleRun(row);
+          break;
+        case "handleView":
+          this.handleView(row);
+          break;
+        case "handleJobLog":
+          this.handleJobLog(row);
+          break;
+        default:
+          break;
+      }
+    },
     // 任务状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
       this.$confirm('确认要"' + text + '""' + row.jobName + '"任务吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return changeJobStatus(row.jobId, row.status);
-      }).then(() => {
-        this.msgSuccess(text + "成功");
-      }).catch(function() {
-        row.status = row.status === "0" ? "1" : "0";
-      });
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return changeJobStatus(row.jobId, row.status);
+        }).then(() => {
+          this.msgSuccess(text + "成功");
+        }).catch(function() {
+          row.status = row.status === "0" ? "1" : "0";
+        });
     },
     /* 立即执行一次 */
     handleRun(row) {
       this.$confirm('确认要立即执行一次"' + row.jobName + '"任务吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return runJob(row.jobId, row.jobGroup);
-      }).then(() => {
-        this.msgSuccess("执行成功");
-      })
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return runJob(row.jobId, row.jobGroup);
+        }).then(() => {
+          this.msgSuccess("执行成功");
+        }).catch(() => {});
     },
     /** 任务详细信息 */
     handleView(row) {
@@ -419,9 +465,19 @@ export default {
         this.openView = true;
       });
     },
+    /** cron表达式按钮操作 */
+    handleShowCron() {
+      this.expression = this.form.cronExpression;
+      this.openCron = true;
+    },
+    /** 确定后回传值 */
+    crontabFill(value) {
+      this.form.cronExpression = value;
+    },
     /** 任务日志列表查询 */
-    handleJobLog() {
-      this.$router.push("/job/log");
+    handleJobLog(row) {
+      const jobId = row.jobId || 0;
+      this.$router.push({ path: '/monitor/job-log/index', query: { jobId: jobId } })
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -463,30 +519,30 @@ export default {
     handleDelete(row) {
       const jobIds = row.jobId || this.ids;
       this.$confirm('是否确认删除定时任务编号为"' + jobIds + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return delJob(jobIds);
-      }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      })
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delJob(jobIds);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
       this.$confirm("是否确认导出所有定时任务数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.exportLoading = true;
-        return exportJob(queryParams);
-      }).then(response => {
-        this.download(response.msg);
-        this.exportLoading = false;
-      })
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.exportLoading = true;
+          return exportJob(queryParams);
+        }).then(response => {
+          this.download(response.msg);
+          this.exportLoading = false;
+        }).catch(() => {});
     }
   }
 };

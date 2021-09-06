@@ -5,7 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-import ParentView from '@/components/ParentView';
 
 /**
  * Note: 路由配置项
@@ -22,6 +21,7 @@ import ParentView from '@/components/ParentView';
     title: 'title'               // 设置该路由在侧边栏和面包屑中展示的名字
     icon: 'svg-name'             // 设置该路由的图标，对应路径src/assets/icons/svg
     breadcrumb: false            // 如果设置为false，则不会在breadcrumb面包屑中显示
+    activeMenu: '/system/user'   // 当路由设置了该属性，则会高亮相对应的侧边栏。
   }
  */
 
@@ -44,6 +44,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/register',
+    component: (resolve) => require(['@/views/register'], resolve),
+    hidden: true
+  },
+  {
     path: '/404',
     component: (resolve) => require(['@/views/error/404'], resolve),
     hidden: true
@@ -61,8 +66,8 @@ export const constantRoutes = [
       {
         path: 'index',
         component: (resolve) => require(['@/views/index'], resolve),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+        name: 'Index',
+        meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -81,41 +86,67 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/dict',
+    path: '/system/user-auth',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'type/data/:dictId(\\d+)',
+        path: 'role/:userId(\\d+)',
+        component: (resolve) => require(['@/views/system/user/authRole'], resolve),
+        name: 'AuthRole',
+        meta: { title: '分配角色', activeMenu: '/system/user'}
+      }
+    ]
+  },
+  {
+    path: '/system/role-auth',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'user/:roleId(\\d+)',
+        component: (resolve) => require(['@/views/system/role/authUser'], resolve),
+        name: 'AuthUser',
+        meta: { title: '分配用户', activeMenu: '/system/role'}
+      }
+    ]
+  },
+  {
+    path: '/system/dict-data',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index/:dictId(\\d+)',
         component: (resolve) => require(['@/views/system/dict/data'], resolve),
         name: 'Data',
-        meta: { title: '字典数据', icon: '' }
+        meta: { title: '字典数据', activeMenu: '/system/dict'}
       }
     ]
   },
   {
-    path: '/job',
+    path: '/monitor/job-log',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'log',
+        path: 'index',
         component: (resolve) => require(['@/views/monitor/job/log'], resolve),
         name: 'JobLog',
-        meta: { title: '调度日志' }
+        meta: { title: '调度日志', activeMenu: '/monitor/job'}
       }
     ]
   },
   {
-    path: '/gen',
+    path: '/tool/gen-edit',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'edit/:tableId(\\d+)',
+        path: 'index/:tableId(\\d+)',
         component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
         name: 'GenEdit',
-        meta: { title: '修改生成配置' }
+        meta: { title: '修改生成配置', activeMenu: '/tool/gen'}
       }
     ]
   }

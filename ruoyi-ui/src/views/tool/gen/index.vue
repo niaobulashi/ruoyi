@@ -161,7 +161,7 @@
       @pagination="getList"
     />
     <!-- 预览界面 -->
-    <el-dialog :title="preview.title" :visible.sync="preview.open" width="80%" top="5vh" append-to-body>
+    <el-dialog :title="preview.title" :visible.sync="preview.open" width="80%" top="5vh" append-to-body class="scrollbar">
       <el-tabs v-model="preview.activeName">
         <el-tab-pane
           v-for="(value, key) in preview.data"
@@ -169,7 +169,7 @@
           :name="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
           :key="key"
         >
-          <pre><code class="hljs" v-html="highlightedCode(value, key)"></code></pre>
+        <pre><code class="hljs" v-html="highlightedCode(value, key)"></code></pre>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -280,10 +280,10 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        return synchDb(tableName);
+          return synchDb(tableName);
       }).then(() => {
-        this.msgSuccess("同步成功");
-      })
+          this.msgSuccess("同步成功");
+      }).catch(() => {});
     },
     /** 打开导入表弹窗 */
     openImportTable() {
@@ -319,7 +319,7 @@ export default {
     /** 修改按钮操作 */
     handleEditTable(row) {
       const tableId = row.tableId || this.ids[0];
-      this.$router.push("/gen/edit/" + tableId);
+      this.$router.push("/tool/gen-edit/index/" + tableId);
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -329,11 +329,11 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        return delTable(tableIds);
+          return delTable(tableIds);
       }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      })
+          this.getList();
+          this.msgSuccess("删除成功");
+      }).catch(() => {});
     }
   }
 };

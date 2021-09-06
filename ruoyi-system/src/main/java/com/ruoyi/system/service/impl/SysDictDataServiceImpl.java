@@ -2,13 +2,8 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.exception.CustomException;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.service.ISysConfigService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.domain.entity.SysDictData;
@@ -24,13 +19,9 @@ import com.ruoyi.system.service.ISysDictDataService;
 @Service
 public class SysDictDataServiceImpl implements ISysDictDataService
 {
-    private static final Logger log = LoggerFactory.getLogger(SysDictDataServiceImpl.class);
-    
     @Autowired
     private SysDictDataMapper dictDataMapper;
-    
-    @Autowired
-    private ISysConfigService configService;
+
     /**
      * 根据条件分页查询字典数据
      * 
@@ -75,29 +66,31 @@ public class SysDictDataServiceImpl implements ISysDictDataService
      * @return 结果
      */
     @Override
-    public int deleteDictDataByIds(Long[] dictCodes)
+    public void deleteDictDataByIds(Long[] dictCodes)
     {
-        int row = dictDataMapper.deleteDictDataByIds(dictCodes);
-        if (row > 0)
+        for (Long dictCode : dictCodes)
         {
-            DictUtils.clearDictCache();
+            SysDictData data = selectDictDataById(dictCode);
+            dictDataMapper.deleteDictDataById(dictCode);
+            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(data.getDictType());
+            DictUtils.setDictCache(data.getDictType(), dictDatas);
         }
-        return row;
     }
 
     /**
      * 新增保存字典数据信息
      * 
-     * @param dictData 字典数据信息
+     * @param data 字典数据信息
      * @return 结果
      */
     @Override
-    public int insertDictData(SysDictData dictData)
+    public int insertDictData(SysDictData data)
     {
-        int row = dictDataMapper.insertDictData(dictData);
+        int row = dictDataMapper.insertDictData(data);
         if (row > 0)
         {
-            DictUtils.clearDictCache();
+            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(data.getDictType());
+            DictUtils.setDictCache(data.getDictType(), dictDatas);
         }
         return row;
     }
@@ -105,16 +98,17 @@ public class SysDictDataServiceImpl implements ISysDictDataService
     /**
      * 修改保存字典数据信息
      * 
-     * @param dictData 字典数据信息
+     * @param data 字典数据信息
      * @return 结果
      */
     @Override
-    public int updateDictData(SysDictData dictData)
+    public int updateDictData(SysDictData data)
     {
-        int row = dictDataMapper.updateDictData(dictData);
+        int row = dictDataMapper.updateDictData(data);
         if (row > 0)
         {
-            DictUtils.clearDictCache();
+            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(data.getDictType());
+            DictUtils.setDictCache(data.getDictType(), dictDatas);
         }
         return row;
     }
@@ -130,7 +124,7 @@ public class SysDictDataServiceImpl implements ISysDictDataService
     @Override
     public String importDictData(List<SysDictData> sysDictDataList, Boolean isUpdateSupport, String operName) {
         if (StringUtils.isNull(sysDictDataList) || sysDictDataList.size() == 0) {
-            throw new CustomException("导入字典数据不能为空！");
+            throw new BaseException("导入字典数据不能为空！");
         }
         int successNum = 0;
         int failureNum = 0;
@@ -158,12 +152,11 @@ public class SysDictDataServiceImpl implements ISysDictDataService
                 failureNum++;
                 String msg = "<br/>" + failureNum + "、字典标签 " + dictData.getDictValue() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
-                log.error(msg, e);
             }
         }
         if (failureNum > 0) {
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new CustomException(failureMsg.toString());
+            throw new BaseException(failureMsg.toString());
         } else {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }

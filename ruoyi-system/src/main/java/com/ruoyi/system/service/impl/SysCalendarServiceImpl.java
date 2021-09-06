@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.ruoyi.common.exception.CustomException;
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.DateUtils;
-import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -147,7 +147,7 @@ public class SysCalendarServiceImpl implements ISysCalendarService {
             }
             // 同步工作日信息接口调用
         } catch (Exception e) {
-            throw new CustomException("同步工作日历信息失败：" + e.getMessage());
+            throw new BaseException("同步工作日历信息失败：" + e.getMessage());
         }
     }
     
@@ -171,7 +171,7 @@ public class SysCalendarServiceImpl implements ISysCalendarService {
             result = net(url, params, "GET");
             System.out.println("返回报文：" + result);
             // 转换返回报文为json格式
-            JSONObject object = JSONObject.fromObject(result);
+            JSONObject object = JSONObject.parseObject(result);
             if (object.getString("status").equals("1")) {
                 // 根据日期和日期类型查询数据库中是否存在
                 SysCalendar calendar = sysCalendarMapper.selectSysCalendarById(dateStr);

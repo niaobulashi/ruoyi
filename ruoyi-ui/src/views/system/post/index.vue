@@ -88,7 +88,11 @@
       <el-table-column label="岗位编码" align="center" prop="postCode" />
       <el-table-column label="岗位名称" align="center" prop="postName" />
       <el-table-column label="岗位排序" align="center" prop="postSort" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="statusOptions" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -224,10 +228,6 @@ export default {
         this.loading = false;
       });
     },
-    // 岗位状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
-    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -301,30 +301,30 @@ export default {
     handleDelete(row) {
       const postIds = row.postId || this.ids;
       this.$confirm('是否确认删除岗位编号为"' + postIds + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return delPost(postIds);
-      }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      })
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delPost(postIds);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
       this.$confirm('是否确认导出所有岗位数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.exportLoading = true;
-        return exportPost(queryParams);
-      }).then(response => {
-        this.download(response.msg);
-        this.exportLoading = false;
-      })
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.exportLoading = true;
+          return exportPost(queryParams);
+        }).then(response => {
+          this.download(response.msg);
+          this.exportLoading = false;
+        }).catch(() => {});
     }
   }
 };

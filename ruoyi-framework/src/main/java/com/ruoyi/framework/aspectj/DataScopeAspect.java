@@ -13,10 +13,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.common.utils.SecurityUtils;
 
 /**
  * 数据过滤处理
@@ -66,6 +64,7 @@ public class DataScopeAspect
     @Before("dataScopePointCut()")
     public void doBefore(JoinPoint point) throws Throwable
     {
+        clearDataScope(point);
         handleDataScope(point);
     }
 
@@ -78,7 +77,7 @@ public class DataScopeAspect
             return;
         }
         // 获取当前的用户
-        LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         if (StringUtils.isNotNull(loginUser))
         {
             SysUser currentUser = loginUser.getUser();
@@ -165,5 +164,18 @@ public class DataScopeAspect
             return method.getAnnotation(DataScope.class);
         }
         return null;
+    }
+
+    /**
+     * 拼接权限sql前先清空params.dataScope参数防止注入
+     */
+    private void clearDataScope(final JoinPoint joinPoint)
+    {
+        Object params = joinPoint.getArgs()[0];
+        if (StringUtils.isNotNull(params) && params instanceof BaseEntity)
+        {
+            BaseEntity baseEntity = (BaseEntity) params;
+            baseEntity.getParams().put(DATA_SCOPE, "");
+        }
     }
 }

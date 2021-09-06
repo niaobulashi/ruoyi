@@ -5,6 +5,7 @@ export function listOrder(query) {
   return request({
     url: '/develop/order/list',
     method: 'get',
+    timeout: 400000,
     params: query
   })
 }
@@ -13,7 +14,8 @@ export function listOrder(query) {
 export function getOrder(id) {
   return request({
     url: '/develop/order/' + id,
-    method: 'get'
+    method: 'get',
+    timeout: 400000
   })
 }
 
