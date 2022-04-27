@@ -1,13 +1,12 @@
 <template>
   <!-- 导入表 -->
   <el-dialog title="导入表" :visible.sync="visible" width="800px" top="5vh" append-to-body>
-    <el-form :model="queryParams" ref="queryForm" :inline="true">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true">
       <el-form-item label="表名称" prop="tableName">
         <el-input
           v-model="queryParams.tableName"
           placeholder="请输入表名称"
           clearable
-          size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -16,7 +15,6 @@
           v-model="queryParams.tableComment"
           placeholder="请输入表描述"
           clearable
-          size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -104,8 +102,13 @@ export default {
     },
     /** 导入按钮操作 */
     handleImportTable() {
-      importTable({ tables: this.tables.join(",") }).then(res => {
-        this.msgSuccess(res.msg);
+      const tableNames = this.tables.join(",");
+      if (tableNames == "") {
+        this.$modal.msgError("请选择要导入的表");
+        return;
+      }
+      importTable({ tables: tableNames }).then(res => {
+        this.$modal.msgSuccess(res.msg);
         if (res.code === 200) {
           this.visible = false;
           this.$emit("ok");

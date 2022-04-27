@@ -42,7 +42,7 @@ export default {
           { required: true, message: "邮箱地址不能为空", trigger: "blur" },
           {
             type: "email",
-            message: "'请输入正确的邮箱地址",
+            message: "请输入正确的邮箱地址",
             trigger: ["blur", "change"]
           }
         ],
@@ -62,14 +62,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           updateUserProfile(this.user).then(response => {
-            this.msgSuccess("修改成功");
+            this.$modal.msgSuccess("修改成功");
           });
         }
       });
     },
     close() {
-      this.$store.dispatch("tagsView/delView", this.$route);
-      this.$router.push({ path: "/index" });
+      this.$tab.closePage();
     }
   }
 };

@@ -2,6 +2,8 @@ package com.ruoyi.common.utils.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
@@ -11,7 +13,7 @@ import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.common.utils.uuid.Seq;
 
 /**
  * 文件上传工具类
@@ -24,27 +26,27 @@ public class FileUploadUtils
      * 默认大小 50M
      */
     public static final long DEFAULT_MAX_SIZE = 50 * 1024 * 1024;
-    
+
     /**
      * 默认的文件名最大长度 100
      */
     public static final int DEFAULT_FILE_NAME_LENGTH = 100;
-    
+
     /**
      * 默认上传的地址
      */
     private static String defaultBaseDir = RuoYiConfig.getProfile();
-    
+
     public static void setDefaultBaseDir(String defaultBaseDir)
     {
         FileUploadUtils.defaultBaseDir = defaultBaseDir;
     }
-    
+
     public static String getDefaultBaseDir()
     {
         return defaultBaseDir;
     }
-    
+
     /**
      * 以默认配置进行文件上传
      *
@@ -63,7 +65,7 @@ public class FileUploadUtils
             throw new IOException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * 根据文件路径上传
      *
@@ -83,7 +85,7 @@ public class FileUploadUtils
             throw new IOException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * 文件上传
      *
@@ -100,37 +102,34 @@ public class FileUploadUtils
             throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,
             InvalidExtensionException
     {
-        int fileNamelength = file.getOriginalFilename().length();
+        int fileNamelength = Objects.requireNonNull(file.getOriginalFilename()).length();
         if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH)
         {
             throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
         }
-        
+
         assertAllowed(file, allowedExtension);
-        
+
         String fileName = extractFilename(file);
-        
-        File desc = getAbsoluteFile(baseDir, fileName);
-        file.transferTo(desc);
-        String pathFileName = getPathFileName(baseDir, fileName);
-        return pathFileName;
+
+        String absPath = getAbsoluteFile(baseDir, fileName).getAbsolutePath();
+        file.transferTo(Paths.get(absPath));
+        return getPathFileName(baseDir, fileName);
     }
-    
+
     /**
      * 编码文件名
      */
     public static final String extractFilename(MultipartFile file)
     {
-        String fileName = file.getOriginalFilename();
-        String extension = getExtension(file);
-        fileName = DateUtils.datePath() + "/" + IdUtils.fastUUID() + "." + extension;
-        return fileName;
+        return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(),
+                FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType), getExtension(file));
     }
 
     public static final File getAbsoluteFile(String uploadDir, String fileName) throws IOException
     {
         File desc = new File(uploadDir + File.separator + fileName);
-        
+
         if (!desc.exists())
         {
             if (!desc.getParentFile().exists())
@@ -140,15 +139,14 @@ public class FileUploadUtils
         }
         return desc;
     }
-	
+
     public static final String getPathFileName(String uploadDir, String fileName) throws IOException
     {
         int dirLastIndex = RuoYiConfig.getProfile().length() + 1;
         String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
-        String pathFileName = Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
-        return pathFileName;
+        return Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
     }
-    
+
     /**
      * 文件大小校验
      *
@@ -161,11 +159,11 @@ public class FileUploadUtils
             throws FileSizeLimitExceededException, InvalidExtensionException
     {
         long size = file.getSize();
-        if (DEFAULT_MAX_SIZE != -1 && size > DEFAULT_MAX_SIZE)
+        if (size > DEFAULT_MAX_SIZE)
         {
             throw new FileSizeLimitExceededException(DEFAULT_MAX_SIZE / 1024 / 1024);
         }
-        
+
         String fileName = file.getOriginalFilename();
         String extension = getExtension(file);
         if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension))
@@ -195,9 +193,9 @@ public class FileUploadUtils
                 throw new InvalidExtensionException(allowedExtension, extension, fileName);
             }
         }
-        
+
     }
-    
+
     /**
      * 判断MIME类型是否是允许的MIME类型
      *
@@ -216,7 +214,7 @@ public class FileUploadUtils
         }
         return false;
     }
-    
+
     /**
      * 获取文件名的后缀
      *
@@ -228,7 +226,7 @@ public class FileUploadUtils
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (StringUtils.isEmpty(extension))
         {
-            extension = MimeTypeUtils.getExtension(file.getContentType());
+            extension = MimeTypeUtils.getExtension(Objects.requireNonNull(file.getContentType()));
         }
         return extension;
     }

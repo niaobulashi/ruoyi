@@ -1,7 +1,6 @@
 package com.ruoyi.common.utils.file;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -22,7 +21,7 @@ import com.ruoyi.common.utils.StringUtils;
 public class ImageUtils
 {
     private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
-    
+
     public static byte[] getImage(String imagePath)
     {
         InputStream is = getFile(imagePath);
@@ -40,7 +39,7 @@ public class ImageUtils
             IOUtils.closeQuietly(is);
         }
     }
-    
+
     public static InputStream getFile(String imagePath)
     {
         try
@@ -55,17 +54,16 @@ public class ImageUtils
         }
         return null;
     }
-    
+
     /**
      * 读取文件为字节数据
-     *
-     * @param key 地址
+     * 
+     * @param url 地址
      * @return 字节数据
      */
     public static byte[] readFile(String url)
     {
         InputStream in = null;
-        ByteArrayOutputStream baos = null;
         try
         {
             if (url.startsWith("http"))
@@ -95,7 +93,6 @@ public class ImageUtils
         finally
         {
             IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(baos);
         }
     }
 }

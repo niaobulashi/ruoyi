@@ -208,7 +208,19 @@ public class RedisCache
         HashOperations<String, String, T> opsForHash = redisTemplate.opsForHash();
         return opsForHash.get(key, hKey);
     }
-    
+	
+    /**
+     * 删除Hash中的数据
+     * 
+     * @param key
+     * @param hKey
+     */
+    public void delCacheMapValue(final String key, final String hKey)
+    {
+        HashOperations hashOperations = redisTemplate.opsForHash();
+        hashOperations.delete(key, hKey);
+    }
+
     /**
      * 获取多个Hash中的数据
      *

@@ -12,10 +12,10 @@ public class GenConstants
 
     /** 树表（增删改查） */
     public static final String TPL_TREE = "tree";
-    
+
     /** 主子表（增删改查） */
     public static final String TPL_SUB = "sub";
-    
+
     /** 树编码字段 */
     public static final String TREE_CODE = "treeCode";
 
@@ -33,7 +33,7 @@ public class GenConstants
 
     /** 数据库字符串类型 */
     public static final String[] COLUMNTYPE_STR = { "char", "varchar", "nvarchar", "varchar2" };
-    
+
     /** 数据库文本类型 */
     public static final String[] COLUMNTYPE_TEXT = { "tinytext", "text", "mediumtext", "longtext" };
 
@@ -78,13 +78,13 @@ public class GenConstants
 
     /** 日期控件 */
     public static final String HTML_DATETIME = "datetime";
-    
+
     /** 图片上传控件 */
     public static final String HTML_IMAGE_UPLOAD = "imageUpload";
-    
+
     /** 文件上传控件 */
     public static final String HTML_FILE_UPLOAD = "fileUpload";
-    
+
     /** 富文本控件 */
     public static final String HTML_EDITOR = "editor";
 
@@ -108,6 +108,9 @@ public class GenConstants
 
     /** 模糊查询 */
     public static final String QUERY_LIKE = "LIKE";
+
+    /** 相等查询 */
+    public static final String QUERY_EQ = "EQ";
 
     /** 需要 */
     public static final String REQUIRE = "1";
