@@ -24,6 +24,8 @@ import com.ruoyi.attendance.service.ITDailyService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 日报管理Controller
  *
@@ -54,14 +56,14 @@ public class TDailyController extends BaseController {
     /**
      * 导出日报管理列表
      */
-    @PreAuthorize("@ss.hasPermi('attendance:daily:export')")
     @Log(title = "日报管理", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public AjaxResult export(TDaily tDaily) {
+    @PreAuthorize("@ss.hasPermi('attendance:daily:export')")
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, TDaily tDaily) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         List<TDaily> list = tDailyService.selectTDailyList(tDaily, loginUser);
         ExcelUtil<TDaily> util = new ExcelUtil<TDaily>(TDaily.class);
-        return util.exportExcel(list, "daily");
+        util.exportExcel(response, list, "日报数据");
     }
     
     /**
@@ -76,8 +78,8 @@ public class TDailyController extends BaseController {
     /**
      * 新增日报管理
      */
-    @PreAuthorize("@ss.hasPermi('attendance:daily:add')")
     @Log(title = "日报管理", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('attendance:daily:add')")
     @PostMapping
     public AjaxResult add(@RequestBody TDaily tDaily) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
@@ -87,8 +89,8 @@ public class TDailyController extends BaseController {
     /**
      * 修改日报管理
      */
-    @PreAuthorize("@ss.hasPermi('attendance:daily:edit')")
     @Log(title = "日报管理", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('attendance:daily:edit')")
     @PutMapping
     public AjaxResult edit(@RequestBody TDaily tDaily) {
         return toAjax(tDailyService.updateTDaily(tDaily));
@@ -97,8 +99,8 @@ public class TDailyController extends BaseController {
     /**
      * 删除日报管理
      */
-    @PreAuthorize("@ss.hasPermi('attendance:daily:remove')")
     @Log(title = "日报管理", businessType = BusinessType.DELETE)
+    @PreAuthorize("@ss.hasPermi('attendance:daily:remove')")
     @DeleteMapping("/{dailyIds}")
     public AjaxResult remove(@PathVariable Long[] dailyIds) {
         return toAjax(tDailyService.deleteTDailyByIds(dailyIds));

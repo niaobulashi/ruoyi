@@ -1,19 +1,17 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="用户名称" prop="nickName">
         <el-input
           v-model="queryParams.nickName"
           placeholder="请输入用户名称"
           clearable
-          size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="日报时间">
         <el-date-picker
           v-model="dateRange"
-          size="small"
           style="width: 240px"
           value-format="yyyy-MM-dd"
           type="daterange"
@@ -29,7 +27,6 @@
           v-model="queryParams.daily"
           placeholder="请输入日报内容"
           clearable
-          size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -78,12 +75,11 @@
           plain
           icon="el-icon-download"
           size="mini"
-          :loading="exportLoading"
           @click="handleExport"
           v-hasPermi="['attendance:daily:export']"
         >导出</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="dailyList" @selection-change="handleSelectionChange">
@@ -160,8 +156,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 导出遮罩层
-      exportLoading: false,
       // 选中数组
       ids: [],
       // 选中的日报日期
@@ -192,6 +186,15 @@ export default {
       },
       // 表单参数
       form: {},
+      // 列信息
+      columns: [
+        { key: 0, label: `用户名称`, visible: true },
+        { key: 1, label: `日报时间`, visible: true },
+        { key: 2, label: `周期`, visible: true },
+        { key: 3, label: `日报内容`, visible: true },
+        { key: 4, label: `备注`, visible: true },
+        { key: 5, label: `操作`, visible: true }
+      ],
       // 表单校验
       rules: {
         dailyTime: [
@@ -320,13 +323,13 @@ export default {
         if (valid) {
           if (this.form.dailyId != null) {
             updateDaily(this.form).then(response => {
-              this.msgSuccess("修改成功");
+              this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
             addDaily(this.form).then(response => {
-              this.msgSuccess("新增成功");
+              this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             });
@@ -338,33 +341,18 @@ export default {
     handleDelete(row) {
       const dailyIds = row.dailyId || this.ids;
       const dailyTimes = row.dailyTime || this.dailyDates;
-      this.$confirm('是否确认删除日报日期为"' + dailyTimes + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除日报日期为"' + dailyTimes + '"的数据项？').then(function() {
         return delDaily(dailyIds);
       }).then(() => {
         this.getList();
-        this.msgSuccess("删除成功");
-      }).catch((err) => {
-      });
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有日报管理数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-          this.exportLoading = true;
-        return exportDaily(queryParams);
-      }).then(response => {
-        this.download(response.msg);
-        this.exportLoading = false;
-      }).catch((err) => {
-      });
+      this.download('attendance/daily/export', {
+        ...this.queryParams
+      }, `daily_${new Date().getTime()}.xlsx`)
     },
     // 是我用来获取当月的第一天的
     handleTimeOld(time, split) {

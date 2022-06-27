@@ -18,52 +18,45 @@ import com.ruoyi.common.core.domain.BaseEntity;
 public class TDaily extends BaseEntity {
     private static final long serialVersionUID = 1L;
     
-    /**
-     * 日报ID
-     */
+    /** 日报ID */
     private Long dailyId;
     
-    /**
-     * 用户ID
-     */
-    @Excel(name = "用户ID")
+    /** 用户ID */
+    @Excel(name = "用户ID", sort = 1)
     private Long userId;
     
-    /**
-     * 日报时间
-     */
+    /** 用户名称 */
+    @Excel(name = "用户名称", sort = 2)
+    private String nickName;
+    
+    /** 日报时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "日报时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "日报时间", sort = 3,  dateFormat = "yyyy-MM-dd")
     private Date dailyTime;
     
-    /**
-     * 日报内容
-     */
-    @Excel(name = "日报内容")
+    /** 周期  */
+    @Excel(name = "周期", sort = 4)
+    private String weekCn;
+    
+    /** 日报内容 */
+    @Excel(name = "日报内容", sort = 5)
     private String daily;
     
-    /**
-     * 删除标识0-未删除1-已删除
-     */
+    /** 备注 */
+    @Excel(name = "备注", sort = 6)
+    private String remark;
+    
+    /** 删除标识0-未删除1-已删除 */
     private String delFlag;
     
-    /**
-     * 用户对象
-     */
+    /** 用户对象 */
     private SysUser user;
-    
-    /**
-     * 用户名称
-     */
-    private String nickName;
     
     /** 开始时间 */
     private String beginTime;
     
     /** 结束时间 */
     private String endTime;
-    /** 周期*/
-    private String weekCn;
     
     public void setDailyId(Long dailyId) {
         this.dailyId = dailyId;

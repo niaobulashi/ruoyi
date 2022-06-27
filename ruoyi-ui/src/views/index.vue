@@ -1,6 +1,7 @@
 <template>
   <div class="app-container home">
-    <el-row :gutter="20">
+    123213
+<!--    <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
 
         <hr />
@@ -702,7 +703,7 @@
           </el-collapse>
         </el-card>
       </el-col>
-    </el-row>
+    </el-row>-->
   </div>
 </template>
 
@@ -723,7 +724,15 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style rel="stylesheet/scss" lang="scss">
+.background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-image: url("../assets/images/home-logo.png");
+  background-size: cover;
+}
 .home {
   blockquote {
     padding: 10px 20px;

@@ -80,7 +80,8 @@ public class TDailyServiceImpl implements ITDailyService {
         tDaily.setNickName(user.getNickName());
         tDaily.setCreateTime(DateUtils.getNowDate());
         tDaily.setCreateBy(user.getUserName());
-        return tDailyMapper.insertTDaily(tDaily);
+        int rows = tDailyMapper.insertTDaily(tDaily);
+        return rows;
     }
     
     /**
