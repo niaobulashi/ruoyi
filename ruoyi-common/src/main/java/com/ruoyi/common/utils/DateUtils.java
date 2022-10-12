@@ -1,6 +1,7 @@
 package com.ruoyi.common.utils;
 
 import java.lang.management.ManagementFactory;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -255,5 +256,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         cale.set(Calendar.DAY_OF_MONTH, 0);
         lastday = format.format(cale.getTime());
         return lastday;
+    }
+    
+    public static Timestamp getTimestamp() {
+        Timestamp tp = new Timestamp(System.currentTimeMillis());
+        return tp;
     }
 }

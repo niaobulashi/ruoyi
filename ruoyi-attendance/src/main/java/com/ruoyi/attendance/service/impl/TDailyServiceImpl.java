@@ -1,5 +1,8 @@
 package com.ruoyi.attendance.service.impl;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -116,5 +119,12 @@ public class TDailyServiceImpl implements ITDailyService {
     @Override
     public int deleteTDailyById(Long dailyId) {
         return tDailyMapper.deleteTDailyById(dailyId);
+    }
+    
+    public static void main(String[] args) {
+        Timestamp timestamp = DateUtils.getTimestamp();
+        DateFormat format = new SimpleDateFormat("yyyy-MM");
+        String dateStr = format.format(timestamp);
+        System.out.println(dateStr);
     }
 }
