@@ -9,7 +9,7 @@ export default {
   name: 'RuoYiGit',
   data() {
     return {
-      url: 'https://github.com/niaobulashi/ruoyi'
+      url: 'https://gitee.com/y_project/RuoYi-Vue'
     }
   },
   methods: {

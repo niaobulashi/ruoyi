@@ -5,8 +5,6 @@ import java.util.List;
 import javax.validation.constraints.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.annotation.Excel.Type;
@@ -56,9 +54,6 @@ public class SysUser extends BaseEntity
 
     /** 密码 */
     private String password;
-
-    /** 盐加密 */
-    private String salt;
 
     /** 帐号状态（0正常 1停用） */
     @Excel(name = "帐号状态", readConverterExp = "0=正常,1=停用")
@@ -202,8 +197,6 @@ public class SysUser extends BaseEntity
         this.avatar = avatar;
     }
 
-    @JsonIgnore
-    @JsonProperty
     public String getPassword()
     {
         return password;
@@ -212,16 +205,6 @@ public class SysUser extends BaseEntity
     public void setPassword(String password)
     {
         this.password = password;
-    }
-
-    public String getSalt()
-    {
-        return salt;
-    }
-
-    public void setSalt(String salt)
-    {
-        this.salt = salt;
     }
 
     public String getStatus()
@@ -326,7 +309,6 @@ public class SysUser extends BaseEntity
             .append("sex", getSex())
             .append("avatar", getAvatar())
             .append("password", getPassword())
-            .append("salt", getSalt())
             .append("status", getStatus())
             .append("delFlag", getDelFlag())
             .append("loginIp", getLoginIp())

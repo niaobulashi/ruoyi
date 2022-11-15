@@ -107,6 +107,27 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 菜单列表
      */
     @Override
+    public Set<String> selectMenuPermsByRoleId(Long roleId)
+    {
+        List<String> perms = menuMapper.selectMenuPermsByRoleId(roleId);
+        Set<String> permsSet = new HashSet<>();
+        for (String perm : perms)
+        {
+            if (StringUtils.isNotEmpty(perm))
+            {
+                permsSet.addAll(Arrays.asList(perm.trim().split(",")));
+            }
+        }
+        return permsSet;
+    }
+
+    /**
+     * 根据用户ID查询菜单
+     * 
+     * @param userId 用户名称
+     * @return 菜单列表
+     */
+    @Override
     public List<SysMenu> selectMenuTreeByUserId(Long userId)
     {
         List<SysMenu> menus = null;
@@ -259,7 +280,7 @@ public class SysMenuServiceImpl implements ISysMenuService
     public boolean hasChildByMenuId(Long menuId)
     {
         int result = menuMapper.hasChildByMenuId(menuId);
-        return result > 0 ? true : false;
+        return result > 0;
     }
     
     /**
@@ -272,7 +293,7 @@ public class SysMenuServiceImpl implements ISysMenuService
     public boolean checkMenuExistRole(Long menuId)
     {
         int result = roleMenuMapper.checkMenuExistRole(menuId);
-        return result > 0 ? true : false;
+        return result > 0;
     }
     
     /**
@@ -508,7 +529,7 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public String innerLinkReplaceEach(String path)
     {
-        return StringUtils.replaceEach(path, new String[] { Constants.HTTP, Constants.HTTPS },
-                new String[] { "", "" });
+        return StringUtils.replaceEach(path, new String[] { Constants.HTTP, Constants.HTTPS, Constants.WWW, "." },
+                new String[] { "", "", "", "/" });
     }
 }

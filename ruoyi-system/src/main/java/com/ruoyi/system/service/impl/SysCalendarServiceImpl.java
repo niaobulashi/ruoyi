@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.DateUtils;
 import org.slf4j.Logger;

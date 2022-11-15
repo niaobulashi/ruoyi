@@ -26,7 +26,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * ${functionName}Controller
- *
+ * 
  * @author ${author}
  * @date ${datetime}
  */
@@ -42,20 +42,20 @@ public class ${ClassName}Controller extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
     @GetMapping("/list")
-    #if($table.crud || $table.sub)
+#if($table.crud || $table.sub)
     public TableDataInfo list(${ClassName} ${className})
     {
         startPage();
         List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
         return getDataTable(list);
     }
-    #elseif($table.tree)
-        public AjaxResult list(${ClassName} ${className})
-        {
-            List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
-            return AjaxResult.success(list);
-        }
-    #end
+#elseif($table.tree)
+    public AjaxResult list(${ClassName} ${className})
+    {
+        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        return success(list);
+    }
+#end
 
     /**
      * 导出${functionName}列表
@@ -77,7 +77,7 @@ public class ${ClassName}Controller extends BaseController
     @GetMapping(value = "/{${pkColumn.javaField}}")
     public AjaxResult getInfo(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
     {
-        return AjaxResult.success(${className}Service.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField}));
+        return success(${className}Service.select${ClassName}By${pkColumn.capJavaField}(${pkColumn.javaField}));
     }
 
     /**
@@ -107,7 +107,7 @@ public class ${ClassName}Controller extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:remove')")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{${pkColumn.javaField}s}")
+	@DeleteMapping("/{${pkColumn.javaField}s}")
     public AjaxResult remove(@PathVariable ${pkColumn.javaType}[] ${pkColumn.javaField}s)
     {
         return toAjax(${className}Service.delete${ClassName}By${pkColumn.capJavaField}s(${pkColumn.javaField}s));

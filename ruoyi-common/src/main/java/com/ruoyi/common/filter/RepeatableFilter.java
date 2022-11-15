@@ -13,7 +13,7 @@ import com.ruoyi.common.utils.StringUtils;
 
 /**
  * Repeatable 过滤器
- *
+ * 
  * @author ruoyi
  */
 public class RepeatableFilter implements Filter
@@ -21,9 +21,9 @@ public class RepeatableFilter implements Filter
     @Override
     public void init(FilterConfig filterConfig) throws ServletException
     {
-    
+
     }
-    
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException
@@ -43,10 +43,10 @@ public class RepeatableFilter implements Filter
             chain.doFilter(requestWrapper, response);
         }
     }
-    
+
     @Override
     public void destroy()
     {
-    
+
     }
 }

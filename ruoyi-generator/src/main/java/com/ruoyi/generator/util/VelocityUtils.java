@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.velocity.VelocityContext;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.constant.GenConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -14,20 +15,20 @@ import com.ruoyi.generator.domain.GenTableColumn;
 
 /**
  * 模板处理工具类
- *
+ * 
  * @author ruoyi
  */
 public class VelocityUtils
 {
     /** 项目空间路径 */
     private static final String PROJECT_PATH = "main/java";
-    
+
     /** mybatis空间路径 */
     private static final String MYBATIS_PATH = "main/resources/mapper";
-    
+
     /** 默认上级菜单，系统工具 */
     private static final String DEFAULT_PARENT_MENU_ID = "3";
-    
+
     /**
      * 设置模板变量信息
      *
@@ -40,7 +41,7 @@ public class VelocityUtils
         String packageName = genTable.getPackageName();
         String tplCategory = genTable.getTplCategory();
         String functionName = genTable.getFunctionName();
-        
+
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("tplCategory", genTable.getTplCategory());
         velocityContext.put("tableName", genTable.getTableName());
@@ -71,23 +72,23 @@ public class VelocityUtils
         }
         return velocityContext;
     }
-    
+
     public static void setMenuVelocityContext(VelocityContext context, GenTable genTable)
     {
         String options = genTable.getOptions();
-        JSONObject paramsObj = JSONObject.parseObject(options);
+        JSONObject paramsObj = JSON.parseObject(options);
         String parentMenuId = getParentMenuId(paramsObj);
         context.put("parentMenuId", parentMenuId);
     }
-    
+
     public static void setTreeVelocityContext(VelocityContext context, GenTable genTable)
     {
         String options = genTable.getOptions();
-        JSONObject paramsObj = JSONObject.parseObject(options);
+        JSONObject paramsObj = JSON.parseObject(options);
         String treeCode = getTreecode(paramsObj);
         String treeParentCode = getTreeParentCode(paramsObj);
         String treeName = getTreeName(paramsObj);
-        
+
         context.put("treeCode", treeCode);
         context.put("treeParentCode", treeParentCode);
         context.put("treeName", treeName);
@@ -101,7 +102,7 @@ public class VelocityUtils
             context.put("tree_name", paramsObj.getString(GenConstants.TREE_NAME));
         }
     }
-    
+
     public static void setSubVelocityContext(VelocityContext context, GenTable genTable)
     {
         GenTable subTable = genTable.getSubTable();
@@ -109,7 +110,7 @@ public class VelocityUtils
         String subTableFkName = genTable.getSubTableFkName();
         String subClassName = genTable.getSubTable().getClassName();
         String subTableFkClassName = StringUtils.convertToCamelCase(subTableFkName);
-        
+
         context.put("subTable", subTable);
         context.put("subTableName", subTableName);
         context.put("subTableFkName", subTableFkName);
@@ -119,7 +120,7 @@ public class VelocityUtils
         context.put("subclassName", StringUtils.uncapitalize(subClassName));
         context.put("subImportList", getImportList(genTable.getSubTable()));
     }
-    
+
     /**
      * 获取模板信息
      *
@@ -151,7 +152,7 @@ public class VelocityUtils
         }
         return templates;
     }
-    
+
     /**
      * 获取文件名
      */
@@ -167,11 +168,11 @@ public class VelocityUtils
         String className = genTable.getClassName();
         // 业务名称
         String businessName = genTable.getBusinessName();
-        
+
         String javaPath = PROJECT_PATH + "/" + StringUtils.replace(packageName, ".", "/");
         String mybatisPath = MYBATIS_PATH + "/" + moduleName;
         String vuePath = "vue";
-        
+
         if (template.contains("domain.java.vm"))
         {
             fileName = StringUtils.format("{}/domain/{}.java", javaPath, className);
@@ -218,7 +219,7 @@ public class VelocityUtils
         }
         return fileName;
     }
-    
+
     /**
      * 获取包前缀
      *
@@ -230,10 +231,10 @@ public class VelocityUtils
         int lastIndex = packageName.lastIndexOf(".");
         return StringUtils.substring(packageName, 0, lastIndex);
     }
-    
+
     /**
      * 根据列类型获取导入包
-     *
+     * 
      * @param genTable 业务表对象
      * @return 返回需要导入的包列表
      */
@@ -310,7 +311,7 @@ public class VelocityUtils
     {
         return StringUtils.format("{}:{}", moduleName, businessName);
     }
-    
+
     /**
      * 获取上级菜单ID字段
      *
@@ -326,7 +327,7 @@ public class VelocityUtils
         }
         return DEFAULT_PARENT_MENU_ID;
     }
-    
+
     /**
      * 获取树编码
      *
@@ -341,7 +342,7 @@ public class VelocityUtils
         }
         return StringUtils.EMPTY;
     }
-    
+
     /**
      * 获取树父编码
      *
@@ -356,7 +357,7 @@ public class VelocityUtils
         }
         return StringUtils.EMPTY;
     }
-    
+
     /**
      * 获取树名称
      *
@@ -371,7 +372,7 @@ public class VelocityUtils
         }
         return StringUtils.EMPTY;
     }
-    
+
     /**
      * 获取需要在哪一列上面显示展开按钮
      *
@@ -381,7 +382,7 @@ public class VelocityUtils
     public static int getExpandColumn(GenTable genTable)
     {
         String options = genTable.getOptions();
-        JSONObject paramsObj = JSONObject.parseObject(options);
+        JSONObject paramsObj = JSON.parseObject(options);
         String treeName = paramsObj.getString(GenConstants.TREE_NAME);
         int num = 0;
         for (GenTableColumn column : genTable.getColumns())

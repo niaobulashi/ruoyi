@@ -31,7 +31,7 @@ public interface ISysConfigService
      * 
      * @return true开启，false关闭
      */
-    public boolean selectCaptchaOnOff();
+    public boolean selectCaptchaEnabled();
 
     /**
      * 查询参数配置列表
@@ -61,7 +61,6 @@ public interface ISysConfigService
      * 批量删除参数信息
      * 
      * @param configIds 需要删除的参数ID
-     * @return 结果
      */
     public void deleteConfigByIds(Long[] configIds);
 

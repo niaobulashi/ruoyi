@@ -163,7 +163,7 @@
             <el-option
               v-for="item in listClassOptions"
               :key="item.value"
-              :label="item.label"
+              :label="item.label + '(' + item.value + ')'"
               :value="item.value"
             ></el-option>
           </el-select>
@@ -191,7 +191,7 @@
 
 <script>
 import { listData, getData, delData, addData, updateData } from "@/api/system/dict/data";
-import { listType, getType } from "@/api/system/dict/type";
+import { optionselect as getDictOptionselect, getType } from "@/api/system/dict/type";
 
 export default {
   name: "Data",
@@ -287,8 +287,8 @@ export default {
     },
     /** 查询字典类型列表 */
     getTypeList() {
-      listType().then(response => {
-        this.typeOptions = response.rows;
+      getDictOptionselect().then(response => {
+        this.typeOptions = response.data;
       });
     },
     /** 查询字典数据列表 */
@@ -364,12 +364,14 @@ export default {
         if (valid) {
           if (this.form.dictCode != undefined) {
             updateData(this.form).then(response => {
+              this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
             addData(this.form).then(response => {
+              this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -386,6 +388,7 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
+        this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
       }).catch(() => {});
     },
     /** 导出按钮操作 */

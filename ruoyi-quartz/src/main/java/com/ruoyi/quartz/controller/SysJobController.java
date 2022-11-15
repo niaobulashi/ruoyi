@@ -71,7 +71,7 @@ public class SysJobController extends BaseController
     @GetMapping(value = "/{jobId}")
     public AjaxResult getInfo(@PathVariable("jobId") Long jobId)
     {
-        return AjaxResult.success(jobService.selectJobById(jobId));
+        return success(jobService.selectJobById(jobId));
     }
 
     /**
@@ -167,8 +167,8 @@ public class SysJobController extends BaseController
     @PutMapping("/run")
     public AjaxResult run(@RequestBody SysJob job) throws SchedulerException
     {
-        jobService.run(job);
-        return AjaxResult.success();
+        boolean result = jobService.run(job);
+        return result ? success() : error("任务不存在或已过期！");
     }
 
     /**
@@ -180,6 +180,6 @@ public class SysJobController extends BaseController
     public AjaxResult remove(@PathVariable Long[] jobIds) throws SchedulerException, TaskException
     {
         jobService.deleteJobByIds(jobIds);
-        return AjaxResult.success();
+        return success();
     }
 }

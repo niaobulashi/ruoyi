@@ -37,7 +37,7 @@ public class Convert
         }
         return value.toString();
     }
-    
+
     /**
      * 转换为字符串<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
@@ -50,7 +50,7 @@ public class Convert
     {
         return toStr(value, null);
     }
-    
+
     /**
      * 转换为字符<br>
      * 如果给定的值为null，或者转换失败，返回默认值<br>
@@ -70,11 +70,11 @@ public class Convert
         {
             return (Character) value;
         }
-        
+
         final String valueStr = toStr(value, null);
         return StringUtils.isEmpty(valueStr) ? defaultValue : valueStr.charAt(0);
     }
-    
+
     /**
      * 转换为字符<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
@@ -87,7 +87,7 @@ public class Convert
     {
         return toChar(value, null);
     }
-    
+
     /**
      * 转换为byte<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
@@ -125,7 +125,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为byte<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
@@ -138,7 +138,7 @@ public class Convert
     {
         return toByte(value, null);
     }
-    
+
     /**
      * 转换为Short<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
@@ -176,7 +176,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为Short<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
@@ -189,7 +189,7 @@ public class Convert
     {
         return toShort(value, null);
     }
-    
+
     /**
      * 转换为Number<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -223,7 +223,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为Number<br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
@@ -236,7 +236,7 @@ public class Convert
     {
         return toNumber(value, null);
     }
-    
+
     /**
      * 转换为int<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -274,7 +274,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为int<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
@@ -287,7 +287,7 @@ public class Convert
     {
         return toInt(value, null);
     }
-    
+
     /**
      * 转换为Integer数组<br>
      *
@@ -298,7 +298,7 @@ public class Convert
     {
         return toIntArray(",", str);
     }
-    
+
     /**
      * 转换为Long数组<br>
      *
@@ -309,7 +309,7 @@ public class Convert
     {
         return toLongArray(",", str);
     }
-    
+
     /**
      * 转换为Integer数组<br>
      *
@@ -332,7 +332,7 @@ public class Convert
         }
         return ints;
     }
-    
+
     /**
      * 转换为Long数组<br>
      *
@@ -355,7 +355,7 @@ public class Convert
         }
         return longs;
     }
-    
+
     /**
      * 转换为String数组<br>
      *
@@ -366,7 +366,7 @@ public class Convert
     {
         return toStrArray(",", str);
     }
-    
+
     /**
      * 转换为String数组<br>
      *
@@ -378,7 +378,7 @@ public class Convert
     {
         return str.split(split);
     }
-    
+
     /**
      * 转换为long<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -417,7 +417,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为long<br>
      * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
@@ -430,7 +430,7 @@ public class Convert
     {
         return toLong(value, null);
     }
-    
+
     /**
      * 转换为double<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -469,7 +469,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为double<br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
@@ -482,7 +482,7 @@ public class Convert
     {
         return toDouble(value, null);
     }
-    
+
     /**
      * 转换为Float<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -520,7 +520,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为Float<br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
@@ -533,7 +533,7 @@ public class Convert
     {
         return toFloat(value, null);
     }
-    
+
     /**
      * 转换为boolean<br>
      * String支持的值为：true、false、yes、ok、no，1,0 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -562,24 +562,19 @@ public class Convert
         switch (valueStr)
         {
             case "true":
-                return true;
-            case "false":
-                return false;
             case "yes":
-                return true;
             case "ok":
-                return true;
-            case "no":
-                return false;
             case "1":
                 return true;
+            case "false":
+            case "no":
             case "0":
                 return false;
             default:
                 return defaultValue;
         }
     }
-    
+
     /**
      * 转换为boolean<br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
@@ -592,7 +587,7 @@ public class Convert
     {
         return toBool(value, null);
     }
-    
+
     /**
      * 转换为Enum对象<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -628,7 +623,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为Enum对象<br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
@@ -641,7 +636,7 @@ public class Convert
     {
         return toEnum(clazz, value, null);
     }
-    
+
     /**
      * 转换为BigInteger<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -679,7 +674,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为BigInteger<br>
      * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
@@ -692,7 +687,7 @@ public class Convert
     {
         return toBigInteger(value, null);
     }
-    
+
     /**
      * 转换为BigDecimal<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -738,7 +733,7 @@ public class Convert
             return defaultValue;
         }
     }
-    
+
     /**
      * 转换为BigDecimal<br>
      * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -751,7 +746,7 @@ public class Convert
     {
         return toBigDecimal(value, null);
     }
-    
+
     /**
      * 将对象转为字符串<br>
      * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
@@ -763,7 +758,7 @@ public class Convert
     {
         return str(obj, CharsetKit.CHARSET_UTF_8);
     }
-    
+
     /**
      * 将对象转为字符串<br>
      * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
@@ -776,7 +771,7 @@ public class Convert
     {
         return str(obj, Charset.forName(charsetName));
     }
-    
+
     /**
      * 将对象转为字符串<br>
      * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
@@ -791,7 +786,7 @@ public class Convert
         {
             return null;
         }
-        
+
         if (obj instanceof String)
         {
             return (String) obj;
@@ -811,7 +806,7 @@ public class Convert
         }
         return obj.toString();
     }
-    
+
     /**
      * 将byte数组转为字符串
      *
@@ -823,7 +818,7 @@ public class Convert
     {
         return str(bytes, StringUtils.isEmpty(charset) ? Charset.defaultCharset() : Charset.forName(charset));
     }
-    
+
     /**
      * 解码字节码
      *
@@ -837,14 +832,14 @@ public class Convert
         {
             return null;
         }
-        
+
         if (null == charset)
         {
             return new String(data);
         }
         return new String(data, charset);
     }
-    
+
     /**
      * 将编码的byteBuffer数据转换为字符串
      *
@@ -858,10 +853,10 @@ public class Convert
         {
             return null;
         }
-        
+
         return str(data, Charset.forName(charset));
     }
-    
+
     /**
      * 将编码的byteBuffer数据转换为字符串
      *
@@ -877,7 +872,7 @@ public class Convert
         }
         return charset.decode(data).toString();
     }
-    
+
     // ----------------------------------------------------------------------- 全角半角转换
     /**
      * 半角转全角
@@ -889,7 +884,7 @@ public class Convert
     {
         return toSBC(input, null);
     }
-    
+
     /**
      * 半角转全角
      *
@@ -899,7 +894,7 @@ public class Convert
      */
     public static String toSBC(String input, Set<Character> notConvertSet)
     {
-        char c[] = input.toCharArray();
+        char[] c = input.toCharArray();
         for (int i = 0; i < c.length; i++)
         {
             if (null != notConvertSet && notConvertSet.contains(c[i]))
@@ -907,7 +902,7 @@ public class Convert
                 // 跳过不替换的字符
                 continue;
             }
-            
+
             if (c[i] == ' ')
             {
                 c[i] = '\u3000';
@@ -915,12 +910,12 @@ public class Convert
             else if (c[i] < '\177')
             {
                 c[i] = (char) (c[i] + 65248);
-                
+
             }
         }
         return new String(c);
     }
-    
+
     /**
      * 全角转半角
      *
@@ -931,7 +926,7 @@ public class Convert
     {
         return toDBC(input, null);
     }
-    
+
     /**
      * 替换全角为半角
      *
@@ -941,7 +936,7 @@ public class Convert
      */
     public static String toDBC(String text, Set<Character> notConvertSet)
     {
-        char c[] = text.toCharArray();
+        char[] c = text.toCharArray();
         for (int i = 0; i < c.length; i++)
         {
             if (null != notConvertSet && notConvertSet.contains(c[i]))
@@ -949,7 +944,7 @@ public class Convert
                 // 跳过不替换的字符
                 continue;
             }
-            
+
             if (c[i] == '\u3000')
             {
                 c[i] = ' ';
@@ -960,10 +955,10 @@ public class Convert
             }
         }
         String returnString = new String(c);
-        
+
         return returnString;
     }
-    
+
     /**
      * 数字金额大写转换 先写个完整的然后将如零拾替换成零
      *
@@ -975,10 +970,10 @@ public class Convert
         String[] fraction = { "角", "分" };
         String[] digit = { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
         String[][] unit = { { "元", "万", "亿" }, { "", "拾", "佰", "仟" } };
-        
+
         String head = n < 0 ? "负" : "";
         n = Math.abs(n);
-        
+
         String s = "";
         for (int i = 0; i < fraction.length; i++)
         {
@@ -989,7 +984,7 @@ public class Convert
             s = "整";
         }
         int integerPart = (int) Math.floor(n);
-        
+
         for (int i = 0; i < unit[0].length && integerPart > 0; i++)
         {
             String p = "";

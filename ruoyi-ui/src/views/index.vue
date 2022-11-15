@@ -80,6 +80,80 @@
             <span>更新日志</span>
           </div>
           <el-collapse accordion>
+            <el-collapse-item title="v3.8.4 - 2022-09-26">
+              <ol>
+                <li>数据逻辑删除不进行唯一验证</li>
+                <li>Excel注解支持导出对象的子列表方法</li>
+                <li>Excel注解支持自定义隐藏属性列</li>
+                <li>Excel注解支持backgroundColor属性设置背景色</li>
+                <li>支持配置密码最大错误次数/锁定时间</li>
+                <li>登录日志新增解锁账户功能</li>
+                <li>通用下载方法新增config配置选项</li>
+                <li>支持多权限字符匹配角色数据权限</li>
+                <li>页面内嵌iframe切换tab不刷新数据</li>
+                <li>操作日志记录支持排除敏感属性字段</li>
+                <li>修复多文件上传报错出现的异常问题</li>
+                <li>修复图片预览组件src属性为null值控制台报错问题</li>
+                <li>升级oshi到最新版本6.2.2</li>
+                <li>升级fastjson到最新版2.0.14</li>
+                <li>升级pagehelper到最新版1.4.3</li>
+                <li>升级core-js到最新版本3.25.2</li>
+                <li>升级element-ui到最新版本2.15.10</li>
+                <li>优化任务过期不执行调度</li>
+                <li>优化字典数据使用store存取</li>
+                <li>优化修改资料头像被覆盖的问题</li>
+                <li>优化修改用户登录账号重复验证</li>
+                <li>优化代码生成同步后值NULL问题</li>
+                <li>优化定时任务支持执行父类方法</li>
+                <li>优化用户个人信息接口防止修改部门</li>
+                <li>优化布局设置使用el-drawer抽屉显示</li>
+                <li>优化没有权限的用户编辑部门缺少数据</li>
+                <li>优化日志注解记录限制请求地址的长度</li>
+                <li>优化excel/scale属性导出单元格数值类型</li>
+                <li>优化日志操作中重置按钮时重复查询的问题</li>
+                <li>优化多个相同角色数据导致权限SQL重复问题</li>
+                <li>优化表格上右侧工具条（搜索按钮显隐&右侧样式凸出）</li>
+                <li>其他细节优化</li>
+              </ol>
+            </el-collapse-item>
+            <el-collapse-item title="v3.8.3 - 2022-06-27">
+              <ol>
+                <li>新增缓存列表菜单功能</li>
+                <li>代码生成树表新增(展开/折叠)</li>
+                <li>Excel注解支持color字体颜色</li>
+                <li>新增Anonymous匿名访问不鉴权注解</li>
+                <li>用户头像上传限制只能为图片格式</li>
+                <li>接口使用泛型使其看到响应属性字段</li>
+                <li>检查定时任务bean所在包名是否为白名单配置</li>
+                <li>添加页签openPage支持传递参数</li>
+                <li>用户缓存信息添加部门ancestors祖级列表</li>
+                <li>升级element-ui到最新版本2.15.8</li>
+                <li>升级oshi到最新版本6.1.6</li>
+                <li>升级druid到最新版本1.2.11</li>
+                <li>升级fastjson到最新版2.0.8</li>
+                <li>升级spring-boot到最新版本2.5.14</li>
+                <li>降级jsencrypt版本兼容IE浏览器</li>
+                <li>删除多余的salt字段</li>
+                <li>新增获取不带后缀文件名称方法</li>
+                <li>新增获取配置文件中的属性值方法</li>
+                <li>新增内容编码/解码方便插件集成使用</li>
+                <li>字典类型必须以字母开头，且只能为（小写字母，数字，下滑线）</li>
+                <li>优化设置分页参数默认值</li>
+                <li>优化对空字符串参数处理的过滤</li>
+                <li>优化显示顺序orderNum类型为整型</li>
+                <li>优化表单构建按钮不显示正则校验</li>
+                <li>优化字典数据回显样式下拉框显示值</li>
+                <li>优化R响应成功状态码与全局保持一致</li>
+                <li>优化druid开启wall过滤器出现的异常问题</li>
+                <li>优化用户管理左侧树型组件增加选中高亮保持</li>
+                <li>优化新增用户与角色信息&用户与岗位信息逻辑</li>
+                <li>优化默认不启用压缩文件缓存防止node_modules过大</li>
+                <li>修复字典数据显示不全问题</li>
+                <li>修复操作日志查询类型条件为0时会查到所有数据</li>
+                <li>修复Excel注解prompt/combo同时使用不生效问题</li>
+                <li>其他细节优化</li>
+              </ol>
+            </el-collapse-item>
             <el-collapse-item title="v3.8.2 - 2022-04-01">
               <ol>
                 <li>前端支持设置是否需要防止数据重复提交</li>
@@ -713,7 +787,7 @@ export default {
   data() {
     return {
       // 版本号
-      version: "3.8.2",
+      version: "3.8.4",
     };
   },
   methods: {
@@ -724,15 +798,7 @@ export default {
 };
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
-.background {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background-image: url("../assets/images/home-logo.png");
-  background-size: cover;
-}
+<style scoped lang="scss">
 .home {
   blockquote {
     padding: 10px 20px;
