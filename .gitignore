@@ -45,4 +45,3 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
-/ruoyi-admin/src/main/resources/application-prod.yml
