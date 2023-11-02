@@ -2,8 +2,11 @@ package com.ruoyi.attendance.service.impl;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -121,10 +124,31 @@ public class TDailyServiceImpl implements ITDailyService {
         return tDailyMapper.deleteTDailyById(dailyId);
     }
     
-    public static void main(String[] args) {
-        Timestamp timestamp = DateUtils.getTimestamp();
-        DateFormat format = new SimpleDateFormat("yyyy-MM");
-        String dateStr = format.format(timestamp);
-        System.out.println(dateStr);
+    public static void main(String[] args) throws ParseException {
+//        Timestamp timestamp = DateUtils.getTimestamp();
+//        DateFormat format = new SimpleDateFormat("yyyy-MM");
+//        String dateStr = format.format(timestamp);
+//        System.out.println(dateStr);
+
+
+        //格式化时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        //输入 随机起始时间
+        String str = "2022-05-10 00:00:00";
+        //解析时间
+        Date d1 = new Date();
+        long before = d1.getTime();
+        //获取当前时间
+        Date d2 = new Date();
+        long after = d2.getTime();
+
+        long randomDate = randomLong(before,after);
+        System.out.println(sdf.format(randomDate));
+    }
+
+    public static long randomLong(long start, long end){
+        Random r = new Random();
+        return (long) (start + (r.nextFloat() * (end - start + 1)));
     }
 }
