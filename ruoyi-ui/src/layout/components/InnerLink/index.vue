@@ -1,5 +1,5 @@
 <template>
-  <div :style="'height:' + height" v-loading="loading" element-loading-text="ÕýÔÚ¼ÓÔØÒ³Ãæ£¬ÇëÉÔºò£¡">
+  <div :style="'height:' + height" v-loading="loading" element-loading-text="æ­£åœ¨åŠ è½½é¡µé¢ï¼Œè¯·ç¨å€™ï¼">
     <iframe
       :id="iframeId"
       style="width: 100%; height: 100%"
@@ -30,7 +30,7 @@ export default {
     var _this = this;
     const iframeId = ("#" + this.iframeId).replace(/\//g, "\\/");
     const iframe = document.querySelector(iframeId);
-    // iframeÒ³Ãæloading¿ØÖÆ
+    // iframeé¡µé¢loadingæŽ§åˆ¶
     if (iframe.attachEvent) {
       this.loading = true;
       iframe.attachEvent("onload", function () {

@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '日报管理系统',
+      title: process.env.VUE_APP_TITLE,
       logo: logoImg
     }
   }

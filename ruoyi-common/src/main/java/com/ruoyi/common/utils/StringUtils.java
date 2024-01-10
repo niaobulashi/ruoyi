@@ -241,6 +241,30 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     }
 
     /**
+     * 判断是否为空，并且不是空白字符
+     * 
+     * @param str 要判断的value
+     * @return 结果
+     */
+    public static boolean hasText(String str)
+    {
+        return (str != null && !str.isEmpty() && containsText(str));
+    }
+
+    private static boolean containsText(CharSequence str)
+    {
+        int strLen = str.length();
+        for (int i = 0; i < strLen; i++)
+        {
+            if (!Character.isWhitespace(str.charAt(i)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 格式化文本, {} 表示占位符<br>
      * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
      * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
@@ -325,9 +349,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     }
 
     /**
-     * 判断给定的set列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
+     * 判断给定的collection列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
      *
-     * @param set 给定的集合
+     * @param collection 给定的集合
      * @param array 给定的数组
      * @return boolean 结果
      */
@@ -481,13 +505,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     }
 
     /**
-     * 驼峰式命名法 例如：user_name->userName
+     * 驼峰式命名法
+     * 例如：user_name->userName
      */
     public static String toCamelCase(String s)
     {
         if (s == null)
         {
             return null;
+        }
+        if (s.indexOf(SEPARATOR) == -1)
+        {
+            return s;
         }
         s = s.toLowerCase();
         StringBuilder sb = new StringBuilder(s.length());

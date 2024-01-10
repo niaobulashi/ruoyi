@@ -48,6 +48,7 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -96,6 +97,11 @@ public class ExcelUtil<T>
     public static final String FORMULA_REGEX_STR = "=|-|\\+|@";
 
     public static final String[] FORMULA_STR = { "=", "-", "+", "@" };
+
+    /**
+     * 用于dictType属性数据存储，避免重复查缓存
+     */
+    public Map<String, String> sysDictMap = new HashMap<String, String>();
 
     /**
      * Excel sheet最大行数，默认65536
@@ -282,9 +288,23 @@ public class ExcelUtil<T>
      * @param is 输入流
      * @return 转换后集合
      */
-    public List<T> importExcel(InputStream is) throws Exception
+    public List<T> importExcel(InputStream is)
     {
-        return importExcel(is, 0);
+        List<T> list = null;
+        try
+        {
+            list = importExcel(is, 0);
+        }
+        catch (Exception e)
+        {
+            log.error("导入Excel异常{}", e.getMessage());
+            throw new UtilException(e.getMessage());
+        }
+        finally
+        {
+            IOUtils.closeQuietly(is);
+        }
+        return list;
     }
 
     /**
@@ -330,7 +350,6 @@ public class ExcelUtil<T>
         }
         // 获取最后一个非空行的行下标，比如总行数为n，则返回的为n-1
         int rows = sheet.getLastRowNum();
-
         if (rows > 0)
         {
             // 定义一个map用于存放excel列的序号和field.
@@ -445,7 +464,7 @@ public class ExcelUtil<T>
                         {
                             propertyName = field.getName() + "." + attr.targetAttr();
                         }
-                        else if (StringUtils.isNotEmpty(attr.readConverterExp()))
+                        if (StringUtils.isNotEmpty(attr.readConverterExp()))
                         {
                             val = reverseByExp(Convert.toStr(val), attr.readConverterExp(), attr.separator());
                         }
@@ -455,7 +474,7 @@ public class ExcelUtil<T>
                         }
                         else if (!attr.handler().equals(ExcelHandlerAdapter.class))
                         {
-                            val = dataFormatHandlerAdapter(val, attr);
+                            val = dataFormatHandlerAdapter(val, attr, null);
                         }
                         else if (ColumnType.IMAGE == attr.cellType() && StringUtils.isNotEmpty(pictures))
                         {
@@ -982,8 +1001,16 @@ public class ExcelUtil<T>
         }
         if (StringUtils.isNotEmpty(attr.prompt()) || attr.combo().length > 0)
         {
-            // 提示信息或只能选择不能输入的列内容.
-            setPromptOrValidation(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
+            if (attr.combo().length > 15 || StringUtils.join(attr.combo()).length() > 255)
+            {
+                // 如果下拉数大于15或字符串长度大于255，则使用一个新sheet存储，避免生成的模板下拉值获取不到
+                setXSSFValidationWithHidden(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
+            }
+            else
+            {
+                // 提示信息或只能选择不能输入的列内容.
+                setPromptOrValidation(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
+            }
         }
     }
 
@@ -1025,7 +1052,12 @@ public class ExcelUtil<T>
                 }
                 else if (StringUtils.isNotEmpty(dictType) && StringUtils.isNotNull(value))
                 {
-                    cell.setCellValue(convertDictByExp(Convert.toStr(value), dictType, separator));
+                    if (!sysDictMap.containsKey(dictType + value))
+                    {
+                        String lable = convertDictByExp(Convert.toStr(value), dictType, separator);
+                        sysDictMap.put(dictType + value, lable);
+                    }
+                    cell.setCellValue(sysDictMap.get(dictType + value));
                 }
                 else if (value instanceof BigDecimal && -1 != attr.scale())
                 {
@@ -1033,7 +1065,7 @@ public class ExcelUtil<T>
                 }
                 else if (!attr.handler().equals(ExcelHandlerAdapter.class))
                 {
-                    cell.setCellValue(dataFormatHandlerAdapter(value, attr));
+                    cell.setCellValue(dataFormatHandlerAdapter(value, attr, cell));
                 }
                 else
                 {
@@ -1085,6 +1117,58 @@ public class ExcelUtil<T>
             dataValidation.setSuppressDropDownArrow(false);
         }
         sheet.addValidationData(dataValidation);
+    }
+
+    /**
+     * 设置某些列的值只能输入预制的数据,显示下拉框（兼容超出一定数量的下拉框）.
+     * 
+     * @param sheet 要设置的sheet.
+     * @param textlist 下拉框显示的内容
+     * @param promptContent 提示内容
+     * @param firstRow 开始行
+     * @param endRow 结束行
+     * @param firstCol 开始列
+     * @param endCol 结束列
+     */
+    public void setXSSFValidationWithHidden(Sheet sheet, String[] textlist, String promptContent, int firstRow, int endRow, int firstCol, int endCol)
+    {
+        String hideSheetName = "combo_" + firstCol + "_" + endCol;
+        Sheet hideSheet = wb.createSheet(hideSheetName); // 用于存储 下拉菜单数据
+        for (int i = 0; i < textlist.length; i++)
+        {
+            hideSheet.createRow(i).createCell(0).setCellValue(textlist[i]);
+        }
+        // 创建名称，可被其他单元格引用
+        Name name = wb.createName();
+        name.setNameName(hideSheetName + "_data");
+        name.setRefersToFormula(hideSheetName + "!$A$1:$A$" + textlist.length);
+        DataValidationHelper helper = sheet.getDataValidationHelper();
+        // 加载下拉列表内容
+        DataValidationConstraint constraint = helper.createFormulaListConstraint(hideSheetName + "_data");
+        // 设置数据有效性加载在哪个单元格上,四个参数分别是：起始行、终止行、起始列、终止列
+        CellRangeAddressList regions = new CellRangeAddressList(firstRow, endRow, firstCol, endCol);
+        // 数据有效性对象
+        DataValidation dataValidation = helper.createValidation(constraint, regions);
+        if (StringUtils.isNotEmpty(promptContent))
+        {
+            // 如果设置了提示信息则鼠标放上去提示
+            dataValidation.createPromptBox("", promptContent);
+            dataValidation.setShowPromptBox(true);
+        }
+        // 处理Excel兼容性问题
+        if (dataValidation instanceof XSSFDataValidation)
+        {
+            dataValidation.setSuppressDropDownArrow(true);
+            dataValidation.setShowErrorBox(true);
+        }
+        else
+        {
+            dataValidation.setSuppressDropDownArrow(false);
+        }
+
+        sheet.addValidationData(dataValidation);
+        // 设置hiddenSheet隐藏
+        wb.setSheetHidden(wb.getSheetIndex(hideSheet), true);
     }
 
     /**
@@ -1194,13 +1278,13 @@ public class ExcelUtil<T>
      * @param excel 数据注解
      * @return
      */
-    public String dataFormatHandlerAdapter(Object value, Excel excel)
+    public String dataFormatHandlerAdapter(Object value, Excel excel, Cell cell)
     {
         try
         {
             Object instance = excel.handler().newInstance();
-            Method formatMethod = excel.handler().getMethod("format", new Class[] { Object.class, String[].class });
-            value = formatMethod.invoke(instance, value, excel.args());
+            Method formatMethod = excel.handler().getMethod("format", new Class[] { Object.class, String[].class, Cell.class, Workbook.class });
+            value = formatMethod.invoke(instance, value, excel.args(), cell, this.wb);
         }
         catch (Exception e)
         {
@@ -1260,7 +1344,7 @@ public class ExcelUtil<T>
      */
     public String encodingFilename(String filename)
     {
-        filename = UUID.randomUUID().toString() + "_" + filename + ".xlsx";
+        filename = UUID.randomUUID() + "_" + filename + ".xlsx";
         return filename;
     }
 
@@ -1379,7 +1463,8 @@ public class ExcelUtil<T>
                     Excel[] excels = attrs.value();
                     for (Excel attr : excels)
                     {
-                        if (attr != null && (attr.type() == Type.ALL || attr.type() == type))
+                        if (!ArrayUtils.contains(this.excludeFields, field.getName() + "." + attr.targetAttr())
+                                && (attr != null && (attr.type() == Type.ALL || attr.type() == type)))
                         {
                             field.setAccessible(true);
                             fields.add(new Object[] { field, attr });
@@ -1537,7 +1622,7 @@ public class ExcelUtil<T>
                     HSSFPicture pic = (HSSFPicture) shape;
                     int pictureIndex = pic.getPictureIndex() - 1;
                     HSSFPictureData picData = pictures.get(pictureIndex);
-                    String picIndex = String.valueOf(anchor.getRow1()) + "_" + String.valueOf(anchor.getCol1());
+                    String picIndex = anchor.getRow1() + "_" + anchor.getCol1();
                     sheetIndexPicMap.put(picIndex, picData);
                 }
             }

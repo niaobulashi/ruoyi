@@ -44,10 +44,10 @@ public class FileTypeUtils
         }
         return fileName.substring(separatorIndex + 1).toLowerCase();
     }
-    
+
     /**
      * 获取文件类型
-     *
+     * 
      * @param photoByte 文件字节码
      * @return 后缀（不含".")
      */
