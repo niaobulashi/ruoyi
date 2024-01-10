@@ -1,7 +1,5 @@
 package com.ruoyi.attendance.service.impl;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +11,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.aspectj.DataScopeAspect;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.ruoyi.attendance.mapper.TDailyMapper;
 import com.ruoyi.attendance.domain.TDaily;
@@ -26,9 +24,10 @@ import com.ruoyi.attendance.service.ITDailyService;
  * @date 2020-11-12
  */
 @Service
+@RequiredArgsConstructor
 public class TDailyServiceImpl implements ITDailyService {
-    @Autowired
-    private TDailyMapper tDailyMapper;
+
+    private final TDailyMapper tDailyMapper;
     
     /**
      * 查询日报管理
